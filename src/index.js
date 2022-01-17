@@ -1,5 +1,5 @@
 import "./main.css";
+import { home } from "./modules/projectLists";
+import { sendToBody } from "./modules/DOMController";
 
-const testRun = document.createElement("p");
-testRun.textContent = "Hey There";
-document.body.appendChild(testRun);
+sendToBody(home());
