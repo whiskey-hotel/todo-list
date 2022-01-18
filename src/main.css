@@ -1,0 +1,24 @@
+.container {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 1.25em;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+}
+
+.edit {
+	margin-left: auto;
+}
+
+.project-list {
+	border: black 2px solid;
+	display: flex;
+	align-items: center;
+}
+
+.number-of-tasks {
+	margin-left: auto;
+}
