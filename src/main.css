@@ -22,3 +22,8 @@
 .number-of-tasks {
 	margin-left: auto;
 }
+
+#add-project-div {
+	display: flex;
+	align-items: center;
+}
