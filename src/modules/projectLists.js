@@ -79,8 +79,9 @@ function displayNewProjectWindow() {
 	projectNameInputLabel.setAttribute("for", "project-name-input");
 	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
 	const cancelButton = newElement("button", "button", "project-cancel-button", "Cancel");
-	const submitButton = newElement("input", "button", "project-submit-button", "Submit");
+	const submitButton = newElement("input", "button", "project-submit-button");
 	submitButton.type = "submit";
+    submitButton.value = "OK";
 	submitButton.setAttribute("for", "project-name-input");
 
 	newProjectContainer.appendChild(newProjectDiv);
