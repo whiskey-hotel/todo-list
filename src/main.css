@@ -28,7 +28,7 @@
 	align-items: center;
 }
 
-#new-project-container{
+#new-project-form-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,7 +43,7 @@
     /* background-color: rgba(0, 0, 0, 0.5); */
     /* backdrop-filter: blur(4px); */
 }
-#new-project-div{
+#new-project-form-div{
     display: flex;
     flex-direction: column;
     border:solid;
