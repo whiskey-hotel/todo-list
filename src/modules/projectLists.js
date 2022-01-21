@@ -1,5 +1,9 @@
 import { newElement, sendToBody, removeAllChildNodes } from "./DOMController";
 
+const closeWindow = (element) => {
+	document.body.removeChild(element);
+};
+
 const projects = (name) => {
 	const getName = () => name;
 
@@ -14,8 +18,7 @@ const projects = (name) => {
 
 		return newProject;
 	};
-    const updateNumberOfTasks = function()
-    {}
+	const updateNumberOfTasks = function () {};
 
 	const update = function () {};
 	const del = function () {};
@@ -23,10 +26,10 @@ const projects = (name) => {
 	return { getName, create, updateNumberOfTasks };
 };
 
-const tasks = (task, day, time, notes, URL) => {
-    const create = function(){}
+const tasks = (task, notes = "", day = "", time = "") => {
+	const create = function () {};
 
-	return {  };
+	return {};
 };
 
 function home() {
@@ -38,8 +41,8 @@ function home() {
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), "0");
 
-    const taskContainer = newElement("div", "task-container")
-	const taskDiv = newElement("div",...Array(1) ,"task-div");
+	const taskContainer = newElement("div", "task-container");
+	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
 	const taskTitle = newElement("h2", "title", ...Array(1), "All");
 	const taskListDiv = newElement("div", "task-list-div");
@@ -48,7 +51,7 @@ function home() {
 	const addProjectIcon = newElement("span", "material-icons-outlined", "add-project-icon", "add_circle_outline");
 	const addProject = newElement("span", ...Array(1), "add-project", "Add Project");
 
-    const addTaskDiv = newElement("div", ...Array(1), "add-task-div");
+	const addTaskDiv = newElement("div", ...Array(1), "add-task-div");
 	const addTaskIcon = newElement("span", "material-icons-outlined", "add-task-icon", "add_circle");
 
 	projectsContainer.appendChild(projectHeader);
@@ -61,15 +64,19 @@ function home() {
 	addProjectDiv.appendChild(addProjectIcon);
 	addProjectDiv.appendChild(addProject);
 
-    taskContainer.appendChild(taskDiv)
+	taskContainer.appendChild(taskDiv);
 	taskDiv.appendChild(taskHeader);
 	taskHeader.appendChild(taskTitle);
 	taskDiv.appendChild(taskListDiv);
-    taskContainer.appendChild(addTaskDiv);
-    addTaskDiv.appendChild(addTaskIcon);
+	taskContainer.appendChild(addTaskDiv);
+	addTaskDiv.appendChild(addTaskIcon);
 
 	addProjectDiv.addEventListener("click", function () {
 		sendToBody(displayNewProjectWindow());
+	});
+
+	addTaskDiv.addEventListener("click", function () {
+		sendToBody(displayNewTaskWindow());
 	});
 
 	return { projectsContainer, taskContainer };
@@ -98,82 +105,163 @@ function displayNewProjectWindow() {
 	buttonSelectorDiv.appendChild(cancelButton);
 	buttonSelectorDiv.appendChild(submitButton);
 
-	const closeWindow = (element) => {
-		document.body.removeChild(element);
-	};
-
 	cancelButton.addEventListener("click", function () {
 		closeWindow(newProjectContainer);
 	});
 
 	submitButton.addEventListener("click", function () {
 		// const projectsDiv = home().projectsContainer.childNodes[1];
-		const projectsDiv = document.getElementById('projects-div');
+		const projectsDiv = document.getElementById("projects-div");
 		let projectNameValue = projectNameInput.value;
 		let instantiateProjectObject = projects(projectNameValue);
 		let newProject = instantiateProjectObject.create();
 		projectsDiv.appendChild(newProject);
 		closeWindow(newProjectContainer);
-		
 	});
 
 	return newProjectContainer;
 }
 
-function displayNewTaskWindow(){
-    const newTaskContainer = newElement("div", ...Array(1), "new-task-form-container");
+function displayNewTaskWindow() {
+	const newTaskContainer = newElement("div", ...Array(1), "new-task-form-container");
 	const newTaskDiv = newElement("div", ...Array(1), "new-task-form-div");
 	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Task");
 
-	const taskNameInputLabel = newElement("label", "form-labels", ...Array(1), "Task:");
+	const form = newElement("form", ...Array(1), "task-form");
+
 	const taskNameInput = newElement("input", "form-input", "task-name-input");
 	taskNameInput.type = "text";
+	const taskNameInputLabel = newElement("label", "form-labels", ...Array(1), "Task:");
 	taskNameInputLabel.setAttribute("for", "task-name-input");
 
-    const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
-    const taskNotesInput = newElement("input", "form-input", "task-notes-input");
-    taskNotesInput.type = "text";
-    taskNotesInputLabel.setAttribute("for", "task-notes-input")
+	const taskNotesInput = newElement("input", "form-input", "task-notes-input");
+	taskNotesInput.type = "text";
+	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
+	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
-    const date;
-    const time;
+	const dateDiv = newElement("div", "date-time", "date");
+
+	const dateRadioYes = newElement("input", ...Array(1), "include-date");
+	dateRadioYes.type = "Radio";
+	const dateRadioYesLabel = newElement("label", "form-labels", ...Array(1), "Yes");
+	dateRadioYesLabel.setAttribute("for", "include-date");
+
+	const dateRadioNo = newElement("input", ...Array(1), "dont-include-date");
+	dateRadioNo.type = "Radio";
+	dateRadioNo.checked = true;
+	const dateRadioNoLabel = newElement("label", "form-labels", ...Array(1), "No");
+	dateRadioNoLabel.setAttribute("for", "dont-include-date");
+
+	const dateInput = newElement("input", "form-input", "task-date-input");
+	dateInput.type = "text";
+	dateInput.disabled = true;
+	const dateInputLabel = newElement("label", "form-labels", ...Array(1), "Date:");
+	dateInputLabel.setAttribute("for", "task-date-input");
+
+	////////////////////
+
+	const timeDiv = newElement("div", "date-time", "time");
+
+	const timeRadioYes = newElement("input", ...Array(1), "include-time");
+	timeRadioYes.type = "Radio";
+	const timeRadioYesLabel = newElement("label", "form-labels", ...Array(1), "Yes");
+	timeRadioYesLabel.setAttribute("for", "include-time");
+
+	const timeRadioNo = newElement("input", ...Array(1), "dont-include-time");
+	timeRadioNo.type = "Radio";
+	timeRadioNo.checked = true;
+	const timeRadioNoLabel = newElement("label", "form-labels", ...Array(1), "No");
+	timeRadioNoLabel.setAttribute("for", "dont-include-time");
+
+	const timeInput = newElement("input", "form-input", "task-time-input");
+	timeInput.type = "text";
+	timeInput.disabled = true;
+	const timeInputLabel = newElement("label", "form-labels", ...Array(1), "Time:");
+	timeInputLabel.setAttribute("for", "task-time-input");
 
 	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
 	const cancelButton = newElement("button", "button", "task-cancel-button", "Cancel");
 	const submitButton = newElement("input", "button", "task-submit-button");
 	submitButton.type = "submit";
 	submitButton.value = "OK";
-	submitButton.setAttribute("for", "task-name-input");
+	submitButton.setAttribute("for", "task-form");
 
-	newProjectContainer.appendChild(newProjectDiv);
-	newProjectDiv.appendChild(title);
-	newProjectDiv.appendChild(projectNameInputLabel);
-	newProjectDiv.appendChild(projectNameInput);
-	newProjectDiv.appendChild(buttonSelectorDiv);
+	newTaskContainer.appendChild(newTaskDiv);
+	newTaskDiv.appendChild(title);
+	newTaskDiv.appendChild(form);
+	form.appendChild(taskNameInputLabel);
+	form.appendChild(taskNameInput);
+	form.appendChild(taskNotesInputLabel);
+	form.appendChild(taskNotesInput);
+	form.appendChild(dateDiv);
+	dateDiv.appendChild(dateInputLabel);
+	dateDiv.appendChild(dateInput);
+	dateDiv.appendChild(dateRadioYesLabel);
+	dateDiv.appendChild(dateRadioYes);
+	dateDiv.appendChild(dateRadioNoLabel);
+	dateDiv.appendChild(dateRadioNo);
+	form.appendChild(timeDiv);
+	timeDiv.appendChild(timeInputLabel);
+	timeDiv.appendChild(timeInput);
+	timeDiv.appendChild(timeRadioYesLabel);
+	timeDiv.appendChild(timeRadioYes);
+	timeDiv.appendChild(timeRadioNoLabel);
+	timeDiv.appendChild(timeRadioNo);
+	newTaskDiv.appendChild(buttonSelectorDiv);
 	buttonSelectorDiv.appendChild(cancelButton);
 	buttonSelectorDiv.appendChild(submitButton);
 
-	const closeWindow = (element) => {
-		document.body.removeChild(element);
-	};
+	dateRadioYes.addEventListener("click", () => {
+		if (dateRadioYes.checked) {
+			dateRadioNo.checked = false;
+			dateInput.disabled = false;
+		}
+	});
+
+	dateRadioNo.addEventListener("click", () => {
+		if (dateRadioNo.checked) {
+			dateRadioYes.checked = false;
+			dateInput.disabled = true;
+		}
+	});
+
+	timeRadioYes.addEventListener("click", () => {
+		if (timeRadioYes.checked) {
+			timeRadioNo.checked = false;
+			timeInput.disabled = false;
+		}
+	});
+
+	timeRadioNo.addEventListener("click", () => {
+		if (timeRadioNo.checked) {
+			timeRadioYes.checked = false;
+			timeInput.disabled = true;
+		}
+	});
 
 	cancelButton.addEventListener("click", function () {
-		closeWindow(newProjectContainer);
+		closeWindow(newTaskContainer);
 	});
 
 	submitButton.addEventListener("click", function () {
-		// const projectsDiv = home().projectsContainer.childNodes[1];
-		const projectsDiv = document.getElementById('projects-div');
-		let projectNameValue = projectNameInput.value;
-		let instantiateProjectObject = projects(projectNameValue);
-		let newProject = instantiateProjectObject.create();
-		projectsDiv.appendChild(newProject);
-		closeWindow(newProjectContainer);
-		
+		const taskDiv = document.getElementById("task-list-div");
+		let taskNameValue = taskNameInput.value;
+		let taskNotesValue = taskNotesInput.value;
+		let taskDateValue = "";
+		let taskTimeValue = "";
+		if (dateInput) {
+			taskDateValue = dateInput.value;
+		}
+		if (timeInput) {
+			taskTimeValue = dateInput.value;
+		}
+		let instantiateTaskObject = tasks(taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
+		let newTask = instantiateTaskObject.create();
+		taskDiv.appendChild(newTask);
+		closeWindow(newTaskContainer);
 	});
 
-	return newProjectContainer;
-
+	return newTaskContainer;
 }
 
 export { home };
