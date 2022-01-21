@@ -27,9 +27,42 @@ const projects = (name) => {
 };
 
 const tasks = (task, notes = "", day = "", time = "") => {
-	const create = function () {};
+	let complete = false;
+	const create = function () {
+		const newTask = newElement("div", "task-list", "id-tracker");
+		const newTaskCheckMark = newElement("input", "task-checkmark");
+		newTaskCheckMark.type = "radio";
+		const newTaskDetails = newElement("div", "task-info-container");
+		const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
+		const newTaskNotesDiv = newElement("div", "task-notes-div");
+		const newTaskNotes = newElement("p", "task-notes", ...Array(1), notes);
+		const newDateTimeDiv = newElement("div", "task-date-time-div");
+		const newTaskDay = newElement("p", "task-date", ...Array(1), day);
+		const newTasktime = newElement("p", "task-time", ...Array(1), time);
 
-	return {};
+		newTaskCheckMark.addEventListener("click", function () {
+			complete = !complete;
+
+			if (complete) {
+				newTaskCheckMark.checked;
+			} else {
+				newTaskCheckMark.checked = false;
+			}
+		});
+
+		newTask.appendChild(newTaskCheckMark);
+		newTask.appendChild(newTaskDetails);
+		newTaskDetails.appendChild(newTaskTitle);
+		newTaskDetails.appendChild(newTaskNotesDiv);
+		newTaskNotesDiv.appendChild(newTaskNotes);
+		newTaskDetails.appendChild(newDateTimeDiv);
+		newDateTimeDiv.appendChild(newTaskDay);
+		newDateTimeDiv.appendChild(newTasktime);
+
+		return newTask;
+	};
+
+	return { create };
 };
 
 function home() {
@@ -45,7 +78,7 @@ function home() {
 	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
 	const taskTitle = newElement("h2", "title", ...Array(1), "All");
-	const taskListDiv = newElement("div", "task-list-div");
+	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
 
 	const addProjectDiv = newElement("div", ...Array(1), "add-project-div");
 	const addProjectIcon = newElement("span", "material-icons-outlined", "add-project-icon", "add_circle_outline");
@@ -244,7 +277,7 @@ function displayNewTaskWindow() {
 	});
 
 	submitButton.addEventListener("click", function () {
-		const taskDiv = document.getElementById("task-list-div");
+		const taskDiv = document.getElementById("main-task-div");
 		let taskNameValue = taskNameInput.value;
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
@@ -253,7 +286,7 @@ function displayNewTaskWindow() {
 			taskDateValue = dateInput.value;
 		}
 		if (timeInput) {
-			taskTimeValue = dateInput.value;
+			taskTimeValue = timeInput.value;
 		}
 		let instantiateTaskObject = tasks(taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		let newTask = instantiateTaskObject.create();
