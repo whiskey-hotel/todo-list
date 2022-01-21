@@ -4,19 +4,44 @@ import { home } from "./elementBuilder";
 
 const projects = (name) => {
 	const getName = () => name;
+	let totalNumberOfTasks = 0;
+	let numberOfTasks = 0;
 
 	const create = function () {
+		let storageKey = keyGenerator();
 		const modifiedNameForID = name.replace(/\s/g, "");
 		const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
+		newProject.setAttribute("data-value", storageKey);
 		const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
-		const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), "0");
+		const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
 
 		newProject.appendChild(newListTitle);
-		newProject.appendChild(numberOfTasks);
+		newProject.appendChild(numberOfTasksElement);
+
+		store(storageKey, name, numberOfTasks);
 
 		return newProject;
 	};
-	const updateNumberOfTasks = function () {};
+
+	const updateNumberOfTasks = function (count) {
+		totalNumberOfTasks += count;
+	};
+
+	const keyGenerator = function () {
+		let i = 1;
+		let keyTest = 1;
+		let key;
+		while (keyTest) {
+			key = `P${i}`;
+			keyTest = pageState.getStorage(key);
+			i += 1;
+		}
+		return key;
+	};
+
+	const store = function (key, projectName, numberOfTasks) {
+		pageState.populateProjectStorage(key, projectName, numberOfTasks);
+	};
 
 	const update = function () {};
 	const del = function () {};
@@ -24,10 +49,12 @@ const projects = (name) => {
 	return { getName, create, updateNumberOfTasks };
 };
 
-const tasks = (task, project="All", notes = "", day = "", time = "") => {
+const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 	let complete = false;
 	const create = function () {
-		const newTask = newElement("div", "task-list", "id-tracker");
+		let storageKey = keyGenerator();
+		const newTask = newElement("div", "task-list");
+		newTask.setAttribute("data-value", storageKey);
 		const newTaskCheckMark = newElement("input", "task-checkmark");
 		newTaskCheckMark.type = "radio";
 		const newTaskDetails = newElement("div", "task-info-container");
@@ -57,11 +84,29 @@ const tasks = (task, project="All", notes = "", day = "", time = "") => {
 		newDateTimeDiv.appendChild(newTaskDay);
 		newDateTimeDiv.appendChild(newTasktime);
 
+		// projects.updateNumberOfTasks(1);
+		store(storageKey);
+
 		return newTask;
 	};
 
-	return { create };
-};
+	const keyGenerator = function () {
+		let i = 1;
+		let keyTest = 1;
+		let key;
+		while (keyTest) {
+			key = `T${i}`;
+			keyTest = pageState.getStorage(key);
+			i += 1;
+		}
+		return key;
+	};
 
+	const store = function (key) {
+		pageState.populateTaskStorage(key, project, task, notes, day, time);
+	};
+
+	return { create, store };
+};
 
 export { projects, tasks };

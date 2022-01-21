@@ -1,10 +1,23 @@
 const pageState = (() => {
-	const populateStorage = (objectName, objectType, objectKey) => {
+	const populateProjectStorage = (objectKey = "projects", name, count) => {
 		localStorage.setItem(
 			objectKey,
 			JSON.stringify({
-				name: objectName,
-				type: objectType,
+				projectName: name,
+				numberOfTasks: count,
+			})
+		);
+	};
+
+    const populateTaskStorage = (objectKey = "tasks", name, taskTitle, notes, day, time) => {
+		localStorage.setItem(
+			objectKey,
+			JSON.stringify({
+				projectName: name,
+                taskName: taskTitle,
+                notes: notes,
+                day: day,
+                time: time
 			})
 		);
 	};
@@ -17,7 +30,7 @@ const pageState = (() => {
 		return localStorage.removeItem(objectKey);
 	};
 
-	return { populateStorage, getStorage, deleteStorage };
+	return { populateProjectStorage, populateTaskStorage, getStorage, deleteStorage };
 })();
 
 export { pageState };
