@@ -27,4 +27,8 @@ function moduleRender(obj, parentNode) {
 	}
 }
 
-export { newElement, sendToBody, removeAllChildNodes, moduleRender };
+const closeWindow = (element) => {
+	document.body.removeChild(element);
+};
+
+export { newElement, sendToBody, removeAllChildNodes, moduleRender, closeWindow };
