@@ -253,4 +253,61 @@ function displayNewTaskWindow() {
 	return newTaskContainer;
 }
 
-export { home, displayNewProjectWindow, displayNewTaskWindow };
+function newProject(name, storageKey, numberOfTasks){
+    const modifiedNameForID = name.replace(/\s/g, "");
+    const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
+    newProject.setAttribute("data-value", storageKey);
+    const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
+    const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
+
+    newProject.appendChild(newListTitle);
+    newProject.appendChild(numberOfTasksElement);
+
+
+    return newProject;
+}
+
+function newTask(storageKey,task, notes = "", day = "", time = "", complete){
+    const newTask = newElement("div", "task-list");
+    newTask.setAttribute("data-value", storageKey);
+    const newTaskCheckMark = newElement("input", "task-checkmark");
+    newTaskCheckMark.type = "radio";
+    const newTaskDetails = newElement("div", "task-info-container");
+    const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
+    const newTaskNotesDiv = newElement("div", "task-notes-div");
+    const newTaskNotes = newElement("p", "task-notes", ...Array(1), notes);
+    const newDateTimeDiv = newElement("div", "task-date-time-div");
+    const newTaskDay = newElement("p", "task-date", ...Array(1), day);
+    const newTasktime = newElement("p", "task-time", ...Array(1), time);
+
+    newTaskCheckMark.addEventListener("click", function () {
+        complete = !complete;
+
+        if (complete) {
+            newTaskCheckMark.checked;
+        } else {
+            newTaskCheckMark.checked = false;
+        }
+    });
+
+    newTask.appendChild(newTaskCheckMark);
+    newTask.appendChild(newTaskDetails);
+    newTaskDetails.appendChild(newTaskTitle);
+    newTaskDetails.appendChild(newTaskNotesDiv);
+    newTaskNotesDiv.appendChild(newTaskNotes);
+    newTaskDetails.appendChild(newDateTimeDiv);
+    newDateTimeDiv.appendChild(newTaskDay);
+    newDateTimeDiv.appendChild(newTasktime);
+
+    return newTask;
+}
+
+function recall(){
+    for (let i = 0; i<localStorage.length; i++){
+        
+    }
+
+    pageState.getStorage();
+}
+
+export { home, displayNewProjectWindow, displayNewTaskWindow, newProject, newTask, recall };
