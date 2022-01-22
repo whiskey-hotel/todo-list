@@ -291,6 +291,9 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 		}
 	});
 
+	const moreInfoIcon = newElement("span", "material-icons-outlined", ...Array(1), "info");
+	moreInfoIcon.classList.add("more-info-icon");
+
 	newTask.appendChild(newTaskCheckMark);
 	newTask.appendChild(newTaskDetails);
 	newTaskDetails.appendChild(newTaskTitle);
@@ -299,6 +302,7 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 	newTaskDetails.appendChild(newDateTimeDiv);
 	newDateTimeDiv.appendChild(newTaskDay);
 	newDateTimeDiv.appendChild(newTasktime);
+	newTask.appendChild(moreInfoIcon);
 
 	return newTask;
 }
