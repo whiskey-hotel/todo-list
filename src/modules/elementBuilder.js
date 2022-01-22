@@ -8,8 +8,8 @@ function home() {
 	const projectHeader = newElement("div", "header");
 	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
 	const mainList = newElement("div", "project-list", "all-list");
-    mainList.setAttribute("data-value", "P0");
-    pageState.populateProjectStorage("P0", "All", 0);
+	mainList.setAttribute("data-value", "P0");
+	pageState.populateProjectStorage("P0", "All", 0, "project");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), "0");
 
@@ -110,20 +110,18 @@ function displayNewTaskWindow() {
 	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
-    const projectNameSelect = newElement("select", "form-selection", "project-name-selection");
-    const dataAtts = document.getElementsByClassName("project-list");
-    Array.from(dataAtts).forEach((d) => {
-        const projectNameSelectOption = newElement("option");
-        const nameFromStorage = pageState.getStorage(d.dataset.value);
-        projectNameSelectOption.setAttribute("value", nameFromStorage.projectName);
-        projectNameSelectOption.textContent = nameFromStorage.projectName;
-        projectNameSelect.appendChild(projectNameSelectOption);
-    });
-    
+	const projectNameSelect = newElement("select", "form-selection", "project-name-selection");
+	const dataAtts = document.getElementsByClassName("project-list");
+	Array.from(dataAtts).forEach((d) => {
+		const projectNameSelectOption = newElement("option");
+		const nameFromStorage = pageState.getStorage(d.dataset.value);
+		projectNameSelectOption.setAttribute("value", nameFromStorage.projectName);
+		projectNameSelectOption.textContent = nameFromStorage.projectName;
+		projectNameSelect.appendChild(projectNameSelectOption);
+	});
 
-    const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
-    projectNameSelectLabel.setAttribute("for", "project-name-selection");
-
+	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
+	projectNameSelectLabel.setAttribute("for", "project-name-selection");
 
 	const dateDiv = newElement("div", "date-time", "date");
 
@@ -177,8 +175,8 @@ function displayNewTaskWindow() {
 	newTaskDiv.appendChild(form);
 	form.appendChild(taskNameInputLabel);
 	form.appendChild(taskNameInput);
-    form.appendChild(projectNameSelectLabel);
-    form.appendChild(projectNameSelect);
+	form.appendChild(projectNameSelectLabel);
+	form.appendChild(projectNameSelect);
 	form.appendChild(taskNotesInputLabel);
 	form.appendChild(taskNotesInput);
 	form.appendChild(dateDiv);
@@ -234,7 +232,7 @@ function displayNewTaskWindow() {
 	submitButton.addEventListener("click", function () {
 		const taskDiv = document.getElementById("main-task-div");
 		let taskNameValue = taskNameInput.value;
-        let taskProjectNameValue = projectNameSelect.value;
+		let taskProjectNameValue = projectNameSelect.value;
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
 		let taskTimeValue = "";
@@ -253,61 +251,76 @@ function displayNewTaskWindow() {
 	return newTaskContainer;
 }
 
-function newProject(name, storageKey, numberOfTasks){
-    const modifiedNameForID = name.replace(/\s/g, "");
-    const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
-    newProject.setAttribute("data-value", storageKey);
-    const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
-    const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
+function newProject(name, storageKey, numberOfTasks) {
+	const modifiedNameForID = name.replace(/\s/g, "");
+	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
+	newProject.setAttribute("data-value", storageKey);
+	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
+	const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
 
-    newProject.appendChild(newListTitle);
-    newProject.appendChild(numberOfTasksElement);
+	newProject.appendChild(newListTitle);
+	newProject.appendChild(numberOfTasksElement);
 
-
-    return newProject;
+	return newProject;
 }
 
-function newTask(storageKey,task, notes = "", day = "", time = "", complete){
-    const newTask = newElement("div", "task-list");
-    newTask.setAttribute("data-value", storageKey);
-    const newTaskCheckMark = newElement("input", "task-checkmark");
-    newTaskCheckMark.type = "radio";
-    const newTaskDetails = newElement("div", "task-info-container");
-    const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
-    const newTaskNotesDiv = newElement("div", "task-notes-div");
-    const newTaskNotes = newElement("p", "task-notes", ...Array(1), notes);
-    const newDateTimeDiv = newElement("div", "task-date-time-div");
-    const newTaskDay = newElement("p", "task-date", ...Array(1), day);
-    const newTasktime = newElement("p", "task-time", ...Array(1), time);
+function newTask(storageKey, task, notes = "", day = "", time = "", complete) {
+	const newTask = newElement("div", "task-list");
+	newTask.setAttribute("data-value", storageKey);
+	const newTaskCheckMark = newElement("input", "task-checkmark");
+	newTaskCheckMark.type = "radio";
+	const newTaskDetails = newElement("div", "task-info-container");
+	const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
+	const newTaskNotesDiv = newElement("div", "task-notes-div");
+	const newTaskNotes = newElement("p", "task-notes", ...Array(1), notes);
+	const newDateTimeDiv = newElement("div", "task-date-time-div");
+	const newTaskDay = newElement("p", "task-date", ...Array(1), day);
+	const newTasktime = newElement("p", "task-time", ...Array(1), time);
 
-    newTaskCheckMark.addEventListener("click", function () {
-        complete = !complete;
+	newTaskCheckMark.addEventListener("click", function () {
+		complete = !complete;
 
-        if (complete) {
-            newTaskCheckMark.checked;
-        } else {
-            newTaskCheckMark.checked = false;
-        }
-    });
+		if (complete) {
+			newTaskCheckMark.checked;
+		} else {
+			newTaskCheckMark.checked = false;
+		}
+	});
 
-    newTask.appendChild(newTaskCheckMark);
-    newTask.appendChild(newTaskDetails);
-    newTaskDetails.appendChild(newTaskTitle);
-    newTaskDetails.appendChild(newTaskNotesDiv);
-    newTaskNotesDiv.appendChild(newTaskNotes);
-    newTaskDetails.appendChild(newDateTimeDiv);
-    newDateTimeDiv.appendChild(newTaskDay);
-    newDateTimeDiv.appendChild(newTasktime);
+	newTask.appendChild(newTaskCheckMark);
+	newTask.appendChild(newTaskDetails);
+	newTaskDetails.appendChild(newTaskTitle);
+	newTaskDetails.appendChild(newTaskNotesDiv);
+	newTaskNotesDiv.appendChild(newTaskNotes);
+	newTaskDetails.appendChild(newDateTimeDiv);
+	newDateTimeDiv.appendChild(newTaskDay);
+	newDateTimeDiv.appendChild(newTasktime);
 
-    return newTask;
+	return newTask;
 }
 
-function recall(){
-    for (let i = 0; i<localStorage.length; i++){
-        
-    }
+function recall() {
+	const projectsDiv = document.getElementById("projects-div");
+	const taskDiv = document.getElementById("main-task-div");
 
-    pageState.getStorage();
+	for (let i = 0; i < localStorage.length; i++) {
+		let storageObject = pageState.getStorage(localStorage.key(i));
+		let storageKey = localStorage.key(i);
+		if (storageObject["type"] == "project" && storageKey != "P0") {
+			let restoredProject = newProject(storageObject["projectName"], storageKey, storageObject["numberOfTasks"]);
+			projectsDiv.appendChild(restoredProject);
+		} else if (storageObject["type"] == "task") {
+			let restoredTask = newTask(
+				storageKey,
+				storageObject["taskName"],
+				storageObject["notes"],
+				storageObject["day"],
+				storageObject["time"],
+				storageObject["complete"]
+			);
+			taskDiv.appendChild(restoredTask);
+		}
+	}
 }
 
 export { home, displayNewProjectWindow, displayNewTaskWindow, newProject, newTask, recall };

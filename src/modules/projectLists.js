@@ -3,13 +3,14 @@ import { pageState } from "./storage";
 import { home, newProject, newTask } from "./elementBuilder";
 
 const projects = (name) => {
+    const type = "project"
 	const getName = () => name;
 	let totalNumberOfTasks = 0;
 	let numberOfTasks = 0;
 
 	const create = function () {
 		let storageKey = keyGenerator();
-		store(storageKey, name, numberOfTasks);
+		store(storageKey, name, numberOfTasks, type);
 		return newProject(name, storageKey, numberOfTasks);
 	};
 
@@ -29,8 +30,8 @@ const projects = (name) => {
 		return key;
 	};
 
-	const store = function (key, projectName, numberOfTasks) {
-		pageState.populateProjectStorage(key, projectName, numberOfTasks);
+	const store = function (key, projectName, numberOfTasks, type) {
+		pageState.populateProjectStorage(key, projectName, numberOfTasks, type);
 	};
 
 	const update = function () {};
@@ -40,10 +41,11 @@ const projects = (name) => {
 };
 
 const tasks = (task, project = "All", notes = "", day = "", time = "") => {
+    const type = "task";
 	let complete = false;
 	const create = function () {
 		let storageKey = keyGenerator();
-		store(storageKey);
+		store(storageKey, type, complete);
 		return newTask(storageKey, task, notes, day, time, complete);
 	};
 
@@ -59,8 +61,8 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		return key;
 	};
 
-	const store = function (key) {
-		pageState.populateTaskStorage(key, project, task, notes, day, time);
+	const store = function (key, type, complete) {
+		pageState.populateTaskStorage(key, project, task, notes, day, time, type, complete);
 	};
 
 	return { create, store };

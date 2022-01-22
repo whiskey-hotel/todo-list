@@ -1,23 +1,26 @@
 const pageState = (() => {
-	const populateProjectStorage = (objectKey = "projects", name, count) => {
+	const populateProjectStorage = (objectKey = "projects", name, count, type) => {
 		localStorage.setItem(
 			objectKey,
 			JSON.stringify({
+                type: type,
 				projectName: name,
 				numberOfTasks: count,
 			})
 		);
 	};
 
-    const populateTaskStorage = (objectKey = "tasks", name, taskTitle, notes, day, time) => {
+    const populateTaskStorage = (objectKey = "tasks", name, taskTitle, notes, day, time, type, complete) => {
 		localStorage.setItem(
 			objectKey,
 			JSON.stringify({
+                type: type,
 				projectName: name,
                 taskName: taskTitle,
                 notes: notes,
                 day: day,
-                time: time
+                time: time,
+                complete: complete,
 			})
 		);
 	};
