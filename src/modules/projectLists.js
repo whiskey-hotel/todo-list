@@ -3,7 +3,7 @@ import { pageState } from "./storage";
 import { home, newProject, newTask } from "./elementBuilder";
 
 const projects = (name) => {
-    const type = "project"
+	const type = "project";
 	const getName = () => name;
 	let totalNumberOfTasks = 0;
 	let numberOfTasks = 0;
@@ -41,12 +41,12 @@ const projects = (name) => {
 };
 
 const tasks = (task, project = "All", notes = "", day = "", time = "") => {
-    const type = "task";
+	const type = "task";
 	let complete = false;
 	const create = function () {
 		let storageKey = keyGenerator();
 		store(storageKey, type, complete);
-		return newTask(storageKey, task, notes, day, time, complete);
+		return newTask(storageKey, project, task, notes, day, time, complete);
 	};
 
 	const keyGenerator = function () {

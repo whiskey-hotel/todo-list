@@ -264,11 +264,14 @@ function newProject(name, storageKey, numberOfTasks) {
 	return newProject;
 }
 
-function newTask(storageKey, task, notes = "", day = "", time = "", complete) {
+function newTask(storageKey, project, task, notes = "", day = "", time = "", complete) {
 	const newTask = newElement("div", "task-list");
 	newTask.setAttribute("data-value", storageKey);
 	const newTaskCheckMark = newElement("input", "task-checkmark");
 	newTaskCheckMark.type = "radio";
+	if (complete) {
+		newTaskCheckMark.checked = true;
+	}
 	const newTaskDetails = newElement("div", "task-info-container");
 	const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
 	const newTaskNotesDiv = newElement("div", "task-notes-div");
@@ -279,6 +282,7 @@ function newTask(storageKey, task, notes = "", day = "", time = "", complete) {
 
 	newTaskCheckMark.addEventListener("click", function () {
 		complete = !complete;
+		tasks(task, project, notes, day, time).store(storageKey, "task", complete);
 
 		if (complete) {
 			newTaskCheckMark.checked;
@@ -312,6 +316,7 @@ function recall() {
 		} else if (storageObject["type"] == "task") {
 			let restoredTask = newTask(
 				storageKey,
+				storageObject["projectName"],
 				storageObject["taskName"],
 				storageObject["notes"],
 				storageObject["day"],
