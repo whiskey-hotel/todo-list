@@ -1,5 +1,6 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./projectLists";
+import { pageState } from "./storage";
 
 function home() {
 	const projectsContainer = newElement("div", "projects-container");
@@ -7,6 +8,8 @@ function home() {
 	const projectHeader = newElement("div", "header");
 	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
 	const mainList = newElement("div", "project-list", "all-list");
+    mainList.setAttribute("data-value", "P0");
+    pageState.populateProjectStorage("P0", "All", 0);
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), "0");
 
@@ -107,6 +110,21 @@ function displayNewTaskWindow() {
 	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
+    const projectNameSelect = newElement("select", "form-selection", "project-name-selection");
+    const dataAtts = document.getElementsByClassName("project-list");
+    Array.from(dataAtts).forEach((d) => {
+        const projectNameSelectOption = newElement("option");
+        const nameFromStorage = pageState.getStorage(d.dataset.value);
+        projectNameSelectOption.setAttribute("value", nameFromStorage.projectName);
+        projectNameSelectOption.textContent = nameFromStorage.projectName;
+        projectNameSelect.appendChild(projectNameSelectOption);
+    });
+    
+
+    const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
+    projectNameSelectLabel.setAttribute("for", "project-name-selection");
+
+
 	const dateDiv = newElement("div", "date-time", "date");
 
 	const dateRadioYes = newElement("input", ...Array(1), "include-date");
@@ -159,6 +177,8 @@ function displayNewTaskWindow() {
 	newTaskDiv.appendChild(form);
 	form.appendChild(taskNameInputLabel);
 	form.appendChild(taskNameInput);
+    form.appendChild(projectNameSelectLabel);
+    form.appendChild(projectNameSelect);
 	form.appendChild(taskNotesInputLabel);
 	form.appendChild(taskNotesInput);
 	form.appendChild(dateDiv);
@@ -214,6 +234,7 @@ function displayNewTaskWindow() {
 	submitButton.addEventListener("click", function () {
 		const taskDiv = document.getElementById("main-task-div");
 		let taskNameValue = taskNameInput.value;
+        let taskProjectNameValue = projectNameSelect.value;
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
 		let taskTimeValue = "";
@@ -223,7 +244,7 @@ function displayNewTaskWindow() {
 		if (timeInput) {
 			taskTimeValue = timeInput.value;
 		}
-		let instantiateTaskObject = tasks(taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
+		let instantiateTaskObject = tasks(taskNameValue, taskProjectNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		let newTask = instantiateTaskObject.create();
 		taskDiv.appendChild(newTask);
 		closeWindow(newTaskContainer);
