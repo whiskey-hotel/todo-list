@@ -301,7 +301,7 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 		moreInfoIcon.style.display = "none";
 	});
 
-	moreInfoIcon.addEventListener("click", function (e) {
+	moreInfoIcon.addEventListener("click", function () {
 		const dropDownDiv = dropDownOption(storageKey, newTask);
 		newTask.appendChild(dropDownDiv);
 	});
