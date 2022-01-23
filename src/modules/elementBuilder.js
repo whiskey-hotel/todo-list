@@ -291,7 +291,7 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 		}
 	});
 
-	const moreInfoIcon = newElement("span", "material-icons-outlined", ...Array(1), "info");
+	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
 	moreInfoIcon.classList.add("more-info-icon");
 	newTask.addEventListener("mouseover", function () {
 		moreInfoIcon.style.display = "inline-block";
@@ -302,7 +302,7 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 	});
 
 	moreInfoIcon.addEventListener("click", function () {
-		const dropDownDiv = dropDownOption(storageKey, newTask);
+		const dropDownDiv = dropDownOption(storageKey);
 		newTask.appendChild(dropDownDiv);
 	});
 
@@ -319,12 +319,27 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 	return newTask;
 }
 
-function dropDownOption(storageKey, newTask) {
+function dropDownOption(storageKey) {
 	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
 	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Edit");
 	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
+
+	let newTask = document.body.querySelector(`.task-list[data-value=${storageKey}]`);
+	let more = document.body.querySelector(`#info-icon-${storageKey}`);
+
+	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
+        key associated with the clicked element. error occurs in the console at every execution */
+	document.addEventListener(
+		"click",
+		function (e) {
+			if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
+				newTask.removeChild(document.getElementById("drop-down"));
+			}
+		},
+		true
+	);
 
 	updateButton.addEventListener("click", function () {
 		newTask.removeChild(dropDownDiv);
