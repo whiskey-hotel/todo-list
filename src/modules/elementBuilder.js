@@ -47,7 +47,7 @@ function home() {
 		sendToBody(displayNewProjectWindow());
 	});
 
-	addTaskDiv.addEventListener("click", function () {
+	addTaskIcon.addEventListener("click", function () {
 		sendToBody(displayNewTaskWindow());
 	});
 
