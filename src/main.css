@@ -24,6 +24,9 @@
 	display: flex;
 	align-items: center;
 }
+
+.drop-down-option,
+.more-info-icon,
 #add-task-icon,
 #add-project-div:hover {
 	cursor: pointer;
@@ -62,7 +65,25 @@
 }
 
 .more-info-icon {
+    display: none;
 	margin-left: auto;
 }
 
+.drop-down-content{
+    display:flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.drop-down-option{
+    padding: 0.25em;
+}
+
+.drop-down-option:hover{
+    background-color: #ddd ;
+}
 

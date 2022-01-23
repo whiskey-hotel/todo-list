@@ -1,4 +1,4 @@
-import { newElement, sendToBody, closeWindow } from "./DOMController";
+import { newElement, sendToBody, closeWindow, removeAllChildNodes } from "./DOMController";
 import { projects, tasks } from "./projectLists";
 import { pageState } from "./storage";
 
@@ -293,6 +293,18 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 
 	const moreInfoIcon = newElement("span", "material-icons-outlined", ...Array(1), "info");
 	moreInfoIcon.classList.add("more-info-icon");
+	newTask.addEventListener("mouseover", function () {
+		moreInfoIcon.style.display = "inline-block";
+	});
+
+	newTask.addEventListener("mouseout", function () {
+		moreInfoIcon.style.display = "none";
+	});
+
+	moreInfoIcon.addEventListener("click", function (e) {
+		const dropDownDiv = dropDownOption(storageKey, newTask);
+		newTask.appendChild(dropDownDiv);
+	});
 
 	newTask.appendChild(newTaskCheckMark);
 	newTask.appendChild(newTaskDetails);
@@ -305,6 +317,27 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 	newTask.appendChild(moreInfoIcon);
 
 	return newTask;
+}
+
+function dropDownOption(storageKey, newTask) {
+	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
+	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Edit");
+	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
+	updateButton.setAttribute("data-value", storageKey);
+	deleteButton.setAttribute("data-value", storageKey);
+
+	updateButton.addEventListener("click", function () {
+		newTask.removeChild(dropDownDiv);
+	});
+
+	deleteButton.addEventListener("click", function () {
+		newTask.removeChild(dropDownDiv);
+	});
+
+	dropDownDiv.appendChild(updateButton);
+	dropDownDiv.appendChild(deleteButton);
+
+	return dropDownDiv;
 }
 
 function recall() {
