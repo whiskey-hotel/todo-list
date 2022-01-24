@@ -49,6 +49,14 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		return newTask(storageKey, project, task, notes, day, time, complete);
 	};
 
+	const update = function (key, projectName, taskTitle, notes, day, time) {
+		let datbaseObj = pageState.getStorage(key);
+
+		datbaseObj && pageState.populateTaskStorage(key, projectName, taskTitle, notes, day, time, datbaseObj["type"], datbaseObj["complete"]);
+
+		return;
+	};
+
 	const keyGenerator = function () {
 		let i = 1;
 		let keyTest = 1;
@@ -65,7 +73,7 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		pageState.populateTaskStorage(key, project, task, notes, day, time, type, complete);
 	};
 
-	return { create, store };
+	return { create, store, update };
 };
 
 export { projects, tasks };

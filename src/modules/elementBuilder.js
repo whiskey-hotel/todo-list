@@ -93,7 +93,7 @@ function displayNewProjectWindow() {
 	return newProjectContainer;
 }
 
-function displayNewTaskWindow() {
+function displayNewTaskWindow(storageKey = null) {
 	const newTaskContainer = newElement("div", ...Array(1), "new-task-form-container");
 	const newTaskDiv = newElement("div", ...Array(1), "new-task-form-div");
 	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Task");
@@ -243,8 +243,18 @@ function displayNewTaskWindow() {
 			taskTimeValue = timeInput.value;
 		}
 		let instantiateTaskObject = tasks(taskNameValue, taskProjectNameValue, taskNotesValue, taskDateValue, taskTimeValue);
-		let newTask = instantiateTaskObject.create();
-		taskDiv.appendChild(newTask);
+		if (storageKey) {
+			const updateTaskDiv = document.querySelector(`.task-list[data-value=${storageKey}]`).childNodes[1];
+			updateTaskDiv.childNodes[0].textContent = taskNameValue;
+			updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
+			updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
+			updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
+			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
+		} else {
+			let newTask = instantiateTaskObject.create();
+			taskDiv.appendChild(newTask);
+		}
+
 		closeWindow(newTaskContainer);
 	});
 
@@ -331,17 +341,14 @@ function dropDownOption(storageKey) {
 
 	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
         key associated with the clicked element. error occurs in the console at every execution */
-	document.addEventListener(
-		"click",
-		function (e) {
-			if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
-				newTask.removeChild(document.getElementById("drop-down"));
-			}
-		},
-		true
-	);
+	document.addEventListener("click", function (e) {
+		if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
+			newTask.removeChild(document.getElementById("drop-down"));
+		}
+	});
 
 	updateButton.addEventListener("click", function () {
+		sendToBody(displayNewTaskWindow(storageKey));
 		newTask.removeChild(dropDownDiv);
 	});
 
