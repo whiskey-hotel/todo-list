@@ -353,7 +353,11 @@ function dropDownOption(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-		newTask.removeChild(dropDownDiv);
+        const mainTaskDiv = document.getElementById("main-task-div")
+        const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`)
+        tasks().deleteTask(storageKey)
+        mainTaskDiv.removeChild(deletedTask)
+		// newTask.removeChild(dropDownDiv);
 	});
 
 	dropDownDiv.appendChild(updateButton);

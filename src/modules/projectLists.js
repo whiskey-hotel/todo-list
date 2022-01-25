@@ -57,6 +57,10 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		return;
 	};
 
+	const deleteTask = function (key) {
+		pageState.deleteStorage(key);
+	};
+
 	const keyGenerator = function () {
 		let i = 1;
 		let keyTest = 1;
@@ -73,7 +77,7 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		pageState.populateTaskStorage(key, project, task, notes, day, time, type, complete);
 	};
 
-	return { create, store, update };
+	return { create, update, deleteTask };
 };
 
 export { projects, tasks };
