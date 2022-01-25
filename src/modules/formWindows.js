@@ -1,5 +1,4 @@
 import { newElement, closeWindow} from "./DOMController";
-import { dropDownOption } from "./elementBuilder";
 import { projects, tasks } from "./projectLists";
 import { pageState } from "./storage";
 

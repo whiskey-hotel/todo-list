@@ -1,6 +1,6 @@
-import { newElement, sendToBody, removeAllChildNodes } from "./DOMController";
 import { pageState } from "./storage";
-import { home, newProject, newTask } from "./elementBuilder";
+import { newTask } from "./taskHandler";
+import { newProject } from "./projectHandler";
 
 const projects = (name) => {
 	const type = "project";
@@ -77,7 +77,7 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		pageState.populateTaskStorage(key, project, task, notes, day, time, type, complete);
 	};
 
-	return { create, update, deleteTask };
+	return { create, update, deleteTask, store };
 };
 
 export { projects, tasks };
