@@ -170,6 +170,25 @@ function displayNewTaskWindow(storageKey = null) {
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "task-form");
 
+	if (storageKey) {
+		taskNameInput.value = pageState.getStorage(`${storageKey}`)["taskName"];
+		taskNotesInput.value = pageState.getStorage(`${storageKey}`)["notes"];
+		projectNameSelect.value = pageState.getStorage(`${storageKey}`)["projectName"];
+
+		if (pageState.getStorage(`${storageKey}`)["day"]) {
+			dateRadioYes.checked = true;
+			dateRadioNo.checked = false;
+			dateInput.disabled = false;
+			dateInput.value = pageState.getStorage(`${storageKey}`)["day"];
+		}
+		if (pageState.getStorage(`${storageKey}`)["time"]) {
+			timeRadioYes.checked = true;
+			timeRadioNo.checked = false;
+			timeInput.disabled = false;
+			timeInput.value = pageState.getStorage(`${storageKey}`)["time"];
+		}
+	}
+
 	newTaskContainer.appendChild(newTaskDiv);
 	newTaskDiv.appendChild(title);
 	newTaskDiv.appendChild(form);
@@ -353,10 +372,10 @@ function dropDownOption(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-        const mainTaskDiv = document.getElementById("main-task-div")
-        const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`)
-        tasks().deleteTask(storageKey)
-        mainTaskDiv.removeChild(deletedTask)
+		const mainTaskDiv = document.getElementById("main-task-div");
+		const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
+		tasks().deleteTask(storageKey);
+		mainTaskDiv.removeChild(deletedTask);
 		// newTask.removeChild(dropDownDiv);
 	});
 
