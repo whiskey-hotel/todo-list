@@ -1,8 +1,8 @@
-import { newElement, closeWindow} from "./DOMController";
+import { newElement, closeWindow } from "./DOMController";
 import { projects, tasks } from "./projectLists";
 import { pageState } from "./storage";
 
-function displayNewProjectWindow() {
+function displayNewProjectWindow(storageKey = null) {
 	const newProjectContainer = newElement("div", ...Array(1), "new-project-form-container");
 	const newProjectDiv = newElement("div", ...Array(1), "new-project-form-div");
 	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Project");
@@ -16,6 +16,10 @@ function displayNewProjectWindow() {
 	submitButton.type = "submit";
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "project-name-input");
+
+	if (storageKey){
+		projectNameInput.value = pageState.getStorage(`${storageKey}`)["projectName"]
+	}
 
 	newProjectContainer.appendChild(newProjectDiv);
 	newProjectDiv.appendChild(title);
@@ -33,15 +37,20 @@ function displayNewProjectWindow() {
 		const projectsDiv = document.getElementById("projects-div");
 		let projectNameValue = projectNameInput.value;
 		let instantiateProjectObject = projects(projectNameValue);
-		let newProject = instantiateProjectObject.create();
-		projectsDiv.appendChild(newProject);
+		if (storageKey) {
+			const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
+			updateProjectDiv.childNodes[0].textContent = projectNameValue;
+			instantiateProjectObject.update(storageKey, projectNameValue);
+		} else {
+			let newProject = instantiateProjectObject.create();
+			projectsDiv.appendChild(newProject);
+		}
+
 		closeWindow(newProjectContainer);
 	});
 
 	return newProjectContainer;
 }
-
-
 
 function displayNewTaskWindow(storageKey = null) {
 	const newTaskContainer = newElement("div", ...Array(1), "new-task-form-container");

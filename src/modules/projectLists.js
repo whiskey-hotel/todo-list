@@ -14,6 +14,18 @@ const projects = (name) => {
 		return newProject(name, storageKey, numberOfTasks);
 	};
 
+	const update = function (key, projectName) {
+		let datbaseObj = pageState.getStorage(key);
+
+		datbaseObj && pageState.populateProjectStorage(key, projectName, datbaseObj["numberOfTasks"], datbaseObj["type"]);
+
+		return;
+	};
+
+    const deleteProject = function(key){
+        pageState.deleteStorage(key);
+    }
+
 	const updateNumberOfTasks = function (count) {
 		totalNumberOfTasks += count;
 	};
@@ -34,10 +46,7 @@ const projects = (name) => {
 		pageState.populateProjectStorage(key, projectName, numberOfTasks, type);
 	};
 
-	const update = function () {};
-	const del = function () {};
-
-	return { getName, create, updateNumberOfTasks };
+	return { getName, create, update, deleteProject, updateNumberOfTasks };
 };
 
 const tasks = (task, project = "All", notes = "", day = "", time = "") => {
