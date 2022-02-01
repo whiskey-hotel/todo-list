@@ -1,8 +1,10 @@
-import { newElement, sendToBody} from "./DOMController";
+import { newElement, sendToBody } from "./DOMController";
 import { displayNewProjectWindow, displayNewTaskWindow } from "./formWindows";
 import { newTask } from "./taskHandler";
 import { newProject } from "./projectHandler";
 import { pageState } from "./storage";
+import { staticTaskCount } from "./taskCountTracking";
+import { projects } from "./projectLists";
 
 function home() {
 	const projectsContainer = newElement("div", "projects-container");
@@ -59,14 +61,18 @@ function home() {
 function recall() {
 	const projectsDiv = document.getElementById("projects-div");
 	const taskDiv = document.getElementById("main-task-div");
+	let totalNumberOfTasks = 0;
+	const allProjectCount = document.body.querySelector(`.project-list[data-value=P0]`);
 
 	for (let i = 0; i < localStorage.length; i++) {
-		let storageObject = pageState.getStorage(localStorage.key(i));
 		let storageKey = localStorage.key(i);
+		let storageObject = pageState.getStorage(storageKey);
 		if (storageObject["type"] == "project" && storageKey != "P0") {
 			let restoredProject = newProject(storageObject["projectName"], storageKey, storageObject["numberOfTasks"]);
 			projectsDiv.appendChild(restoredProject);
 		} else if (storageObject["type"] == "task") {
+			totalNumberOfTasks += 1;
+
 			let restoredTask = newTask(
 				storageKey,
 				storageObject["projectName"],
@@ -79,6 +85,8 @@ function recall() {
 			taskDiv.appendChild(restoredTask);
 		}
 	}
+	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
+	staticTaskCount();
 }
 
 export { home, recall };
