@@ -16,15 +16,33 @@ const projects = (name) => {
 
 	const update = function (key, projectName) {
 		let datbaseObj = pageState.getStorage(key);
+		let oldProjectName = datbaseObj["projectName"];
+
+		for (let i = 0; i < localStorage.length; i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject["type"] == "task" && storageObject["projectName"] == oldProjectName) {
+				pageState.populateTaskStorage(
+					storageKey,
+					projectName,
+					storageObject["taskName"],
+					storageObject["notes"],
+					storageObject["day"],
+					storageObject["time"],
+					storageObject["type"],
+					storageObject["complete"]
+				);
+			}
+		}
 
 		datbaseObj && pageState.populateProjectStorage(key, projectName, datbaseObj["numberOfTasks"], datbaseObj["type"]);
 
 		return;
 	};
 
-    const deleteProject = function(key){
-        pageState.deleteStorage(key);
-    }
+	const deleteProject = function (key) {
+		pageState.deleteStorage(key);
+	};
 
 	const updateNumberOfTasks = function (count) {
 		totalNumberOfTasks += count;
@@ -52,7 +70,7 @@ const projects = (name) => {
 const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 	const type = "task";
 	let complete = false;
-    
+
 	const create = function () {
 		let storageKey = keyGenerator();
 		store(storageKey, type, complete);
