@@ -85,6 +85,7 @@ function recall() {
 			taskDiv.appendChild(restoredTask);
 		}
 	}
+	
 	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
 	staticTaskCount();
 }

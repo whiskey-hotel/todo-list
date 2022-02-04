@@ -1,6 +1,6 @@
 import { newElement, sendToBody } from "./DOMController";
 import { displayNewProjectWindow } from "./formWindows";
-import { projects } from "./projectLists";
+import { projects, tasks } from "./projectLists";
 import { pageState } from "./storage";
 import { deletingTaskCount } from "./taskCountTracking";
 
@@ -81,6 +81,7 @@ function removeAllTasks(storageKey) {
 			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`)
 			mainTaskDiv.removeChild(deletedTask)
 			deletingTaskCount(projectName)
+			tasks().deleteTask(taskKey);
 		}
 	}
 }

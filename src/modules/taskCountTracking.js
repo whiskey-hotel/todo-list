@@ -4,6 +4,12 @@ import { pageState } from "./storage";
 
 function staticTaskCount() {
 	const projectsDiv = document.getElementById("projects-div");
+
+	//First, reset all task counts to zero, then calculate from storage
+	for (let p = 1; p < projectsDiv.childNodes.length; p++) {
+		projectsDiv.childNodes[p].childNodes[1].textContent = 0;
+	}
+	
 	for (let i = 0; i < localStorage.length; i++) {
 		let storageKey = localStorage.key(i);
 		let storageObject = pageState.getStorage(storageKey);
