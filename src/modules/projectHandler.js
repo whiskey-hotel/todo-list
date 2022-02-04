@@ -1,7 +1,8 @@
 import { newElement, sendToBody } from "./DOMController";
 import { displayNewProjectWindow } from "./formWindows";
 import { projects } from "./projectLists";
-
+import { pageState } from "./storage";
+import { deletingTaskCount } from "./taskCountTracking";
 
 function newProject(name, storageKey, numberOfTasks) {
 	const modifiedNameForID = name.replace(/\s/g, "");
@@ -10,7 +11,7 @@ function newProject(name, storageKey, numberOfTasks) {
 	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
 	const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
 
-    const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
+	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
 	moreInfoIcon.classList.add("more-info-icon");
 	newProject.addEventListener("mouseover", function () {
 		moreInfoIcon.style.display = "inline-block";
@@ -58,6 +59,7 @@ function dropDownOption(storageKey) {
 	deleteButton.addEventListener("click", function () {
 		const mainProjectsDiv = document.getElementById("projects-div");
 		const deletedProject = document.body.querySelector(`.project-list[data-value=${storageKey}`);
+		removeAllTasks(storageKey);
 		projects().deleteProject(storageKey);
 		mainProjectsDiv.removeChild(deletedProject);
 	});
@@ -66,6 +68,21 @@ function dropDownOption(storageKey) {
 	dropDownDiv.appendChild(deleteButton);
 
 	return dropDownDiv;
+}
+
+function removeAllTasks(storageKey) {
+	const mainTaskDiv = document.getElementById("main-task-div");
+
+	let projectName = pageState.getStorage(storageKey)["projectName"];
+	for (let i = 0; i < localStorage.length; i++) {
+		let taskKey = localStorage.key(i);
+		let taskObject = pageState.getStorage(taskKey);
+		if (taskObject["type"] == "task" && taskObject["projectName"] == projectName) {
+			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`)
+			mainTaskDiv.removeChild(deletedTask)
+			deletingTaskCount(projectName)
+		}
+	}
 }
 
 export { newProject };
