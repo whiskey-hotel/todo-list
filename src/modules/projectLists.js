@@ -52,6 +52,7 @@ const projects = (name) => {
 const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 	const type = "task";
 	let complete = false;
+    
 	const create = function () {
 		let storageKey = keyGenerator();
 		store(storageKey, type, complete);

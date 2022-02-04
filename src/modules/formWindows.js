@@ -1,6 +1,7 @@
 import { newElement, closeWindow } from "./DOMController";
 import { projects, tasks } from "./projectLists";
 import { pageState } from "./storage";
+import { dynamicTaskCount } from "./taskCountTracking";
 
 function displayNewProjectWindow(storageKey = null) {
 	const newProjectContainer = newElement("div", ...Array(1), "new-project-form-container");
@@ -17,8 +18,8 @@ function displayNewProjectWindow(storageKey = null) {
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "project-name-input");
 
-	if (storageKey){
-		projectNameInput.value = pageState.getStorage(`${storageKey}`)["projectName"]
+	if (storageKey) {
+		projectNameInput.value = pageState.getStorage(`${storageKey}`)["projectName"];
 	}
 
 	newProjectContainer.appendChild(newProjectDiv);
@@ -227,6 +228,8 @@ function displayNewTaskWindow(storageKey = null) {
 			updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
 			updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
 			updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
+			let oldProjectName = pageState.getStorage(storageKey)['projectName']
+			dynamicTaskCount(taskProjectNameValue, storageKey, oldProjectName);
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
 			let newTask = instantiateTaskObject.create();

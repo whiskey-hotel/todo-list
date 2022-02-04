@@ -1,7 +1,8 @@
 import { newElement, sendToBody } from "./DOMController";
 import { displayNewTaskWindow } from "./formWindows";
 import { tasks } from "./projectLists";
-
+import { pageState } from "./storage";
+import { dynamicTaskCount, deletingTaskCount } from "./taskCountTracking";
 
 function newTask(storageKey, project, task, notes = "", day = "", time = "", complete) {
 	const newTask = newElement("div", "task-list");
@@ -29,6 +30,8 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 			newTaskCheckMark.checked = false;
 		}
 	});
+
+	dynamicTaskCount(project);
 
 	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
 	moreInfoIcon.classList.add("more-info-icon");
@@ -84,6 +87,8 @@ function dropDownOption(storageKey) {
 	deleteButton.addEventListener("click", function () {
 		const mainTaskDiv = document.getElementById("main-task-div");
 		const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
+		let projectName = pageState.getStorage(storageKey)["projectName"];
+		deletingTaskCount(projectName);
 		tasks().deleteTask(storageKey);
 		mainTaskDiv.removeChild(deletedTask);
 		// newTask.removeChild(dropDownDiv);
