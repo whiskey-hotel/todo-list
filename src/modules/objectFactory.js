@@ -42,7 +42,9 @@ const projects = (name) => {
 
 	const update = function (key, projectName) {
 		let datbaseObj = pageState.getStorage(key);
-		let oldProjectName = datbaseObj["projectName"];
+		let oldProjectName = datbaseObj.projectName;
+		let newProject = Object.assign({},datbaseObj)
+		newProject.projectName = projectName
 
 		for (let i = 0; i < localStorage.length; i++) {
 			let storageKey = localStorage.key(i);
@@ -61,7 +63,7 @@ const projects = (name) => {
 			}
 		}
 
-		datbaseObj && pageState.populateProjectStorage(key, projectName, datbaseObj["numberOfTasks"], datbaseObj["type"]);
+		datbaseObj && pageState.populateProjectStorage(key, newProject);
 
 		return;
 	};

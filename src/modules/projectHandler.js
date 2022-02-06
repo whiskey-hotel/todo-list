@@ -156,29 +156,6 @@ function displayNewProjectWindow(storageKey = null) {
 		closeWindow(newProjectContainer);
 	});
 
-	// submitButton.addEventListener("click", function () {
-	// 	const projectsDiv = document.getElementById("projects-div");
-	// 	const formField = document.getElementById("project-name-input");
-	// 	let projectNameValue = projectNameInput.value;
-	// 	if(projectNameValue.toLowerCase() == "all"){
-	// 		submitButton.setCustomValidity("Invalid field.");
-	// 		submitButton.setCustomValidity("");
-	// 		submitButton.reportValidity();
-	// 	}
-	// 	let instantiateProjectObject = projects(projectNameValue);
-	// 	if (storageKey) {
-	// 		const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
-	// 		updateProjectDiv.childNodes[0].textContent = projectNameValue;
-	// 		instantiateProjectObject.update(storageKey, projectNameValue);
-	// 	} else {
-	// 		let newProjectObject = instantiateProjectObject.create();
-	// 		let newElement = newProject(newProjectObject)
-	// 		projectsDiv.appendChild(newElement);
-	// 	}
-
-	// 	closeWindow(newProjectContainer);
-	// });
-
 	return newProjectContainer;
 }
 export { newProject, displayNewProjectWindow };
