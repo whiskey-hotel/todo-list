@@ -1,10 +1,6 @@
 const pageState = (() => {
-	const populateProjectStorage = (objectKey, objectValues) => {
+	const populateStorage = (objectKey, objectValues) => {
 		localStorage.setItem(objectKey, JSON.stringify(objectValues));
-	};
-
-	const populateTaskStorage = (objectKey, objectValues) => {
-		localStorage.setItem(objectKey,JSON.stringify(objectValues));
 	};
 
 	const getStorage = (objectKey) => {
@@ -15,7 +11,7 @@ const pageState = (() => {
 		return localStorage.removeItem(objectKey);
 	};
 
-	return { populateProjectStorage, populateTaskStorage, getStorage, deleteStorage };
+	return { populateStorage, getStorage, deleteStorage };
 })();
 
 export { pageState };

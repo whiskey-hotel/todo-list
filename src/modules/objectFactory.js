@@ -23,7 +23,7 @@ const projects = (name) => {
 				}
 			);
 		} else {
-			storageKey = keyGenerator();
+			storageKey = keyGenerator("P");
 			projectObject = Object.assign(
 				{},
 				{
@@ -52,11 +52,11 @@ const projects = (name) => {
 			if (storageObject.type == "task" && storageObject.projectName == oldProjectName) {
 				let renamedProjectForTask = Object.assign({}, storageObject);
 				renamedProjectForTask.projectName = projectName;
-				pageState.populateTaskStorage(storageKey, renamedProjectForTask);
+				pageState.populateStorage(storageKey, renamedProjectForTask);
 			}
 		}
 
-		databaseObj && pageState.populateProjectStorage(key, newProject);
+		databaseObj && pageState.populateStorage(key, newProject);
 
 		return;
 	};
@@ -69,12 +69,12 @@ const projects = (name) => {
 		totalNumberOfTasks += count;
 	};
 
-	const keyGenerator = function () {
+	const keyGenerator = function (letter) {
 		let i = 1;
 		let keyTest = 1;
 		let key;
 		while (keyTest) {
-			key = `P${i}`;
+			key = `${letter}${i}`;
 			keyTest = pageState.getStorage(key);
 			i += 1;
 		}
@@ -82,10 +82,10 @@ const projects = (name) => {
 	};
 
 	const store = function (key, obj) {
-		pageState.populateProjectStorage(key, obj);
+		pageState.populateStorage(key, obj);
 	};
 
-	return { getName, create, update, deleteProject, updateNumberOfTasks };
+	return { getName, create, update, deleteProject, updateNumberOfTasks, store, keyGenerator };
 };
 
 /*
@@ -103,11 +103,12 @@ const projects = (name) => {
 */
 
 const tasks = (task, project, notes, day, time) => {
+	const {store, keyGenerator} = projects(project)
 	const type = "task";
 	let complete = false;
 
 	const create = function () {
-		let storageKey = keyGenerator();
+		let storageKey = keyGenerator("T");
 		let taskObject = Object.assign(
 			{},
 			{
@@ -136,29 +137,13 @@ const tasks = (task, project, notes, day, time) => {
 		newTask.day = day;
 		newTask.time = time;
 
-		datbaseObj && pageState.populateTaskStorage(key, newTask);
+		datbaseObj && pageState.populateStorage(key, newTask);
 
 		return;
 	};
 
 	const deleteTask = function (key) {
 		pageState.deleteStorage(key);
-	};
-
-	const keyGenerator = function () {
-		let i = 1;
-		let keyTest = 1;
-		let key;
-		while (keyTest) {
-			key = `T${i}`;
-			keyTest = pageState.getStorage(key);
-			i += 1;
-		}
-		return key;
-	};
-
-	const store = function (key, obj) {
-		pageState.populateTaskStorage(key, obj);
 	};
 
 	return { create, update, deleteTask, store };
