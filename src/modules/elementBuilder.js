@@ -1,10 +1,8 @@
 import { newElement, sendToBody } from "./DOMController";
-import { displayNewProjectWindow, displayNewTaskWindow } from "./formWindows";
-import { newTask } from "./taskHandler";
-import { newProject } from "./projectHandler";
+import { newTask, displayNewTaskWindow } from "./taskHandler";
+import { newProject, displayNewProjectWindow } from "./projectHandler";
 import { pageState } from "./storage";
 import { staticTaskCount } from "./taskCountTracking";
-import { projects } from "./projectLists";
 
 function home() {
 	const projectsContainer = newElement("div", "projects-container");
