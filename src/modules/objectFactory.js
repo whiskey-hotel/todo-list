@@ -9,18 +9,34 @@ const projects = (name) => {
 	let numberOfTasks = 0;
 
 	const create = function () {
-		let storageKey = keyGenerator();
-		let projectObject = Object.assign(
-			{},
-			{
-				key: storageKey,
-				type: type,
-				projectName: name,
-				numberOfTasks: 0,
-			}
-		);
+		let projectObject;
+		let storageKey;
+		if (name == "All") {
+			storageKey = "P0";
+			projectObject = Object.assign(
+				{},
+				{
+					key: "P0",
+					type: type,
+					projectName: name,
+					numberOfTasks: 0,
+				}
+			);
+		} else {
+			storageKey = keyGenerator();
+			projectObject = Object.assign(
+				{},
+				{
+					key: storageKey,
+					type: type,
+					projectName: name,
+					numberOfTasks: 0,
+				}
+			);
+		}
+
 		store(storageKey, projectObject);
-		// return newProject(name, storageKey, numberOfTasks);
+
 		return projectObject;
 	};
 

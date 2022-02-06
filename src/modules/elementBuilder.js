@@ -3,6 +3,7 @@ import { newTask, displayNewTaskWindow } from "./taskHandler";
 import { newProject, displayNewProjectWindow } from "./projectHandler";
 import { pageState } from "./storage";
 import { staticTaskCount } from "./taskCountTracking";
+import { projects } from "./objectFactory";
 
 function home() {
 	const projectsContainer = newElement("div", "projects-container");
@@ -11,14 +12,16 @@ function home() {
 	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
 	const mainList = newElement("div", "project-list", "all-list");
 	mainList.setAttribute("data-value", "P0");
-	pageState.populateProjectStorage("P0", "All", 0, "project");
+	const instantiateMainProject = projects("All");
+	let mainListObj = instantiateMainProject.create();
+	// pageState.populateProjectStorage("P0", "All", 0, "project");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
-	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), "0");
+	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), mainListObj.numberOfTasks);
 
 	const taskContainer = newElement("div", "task-container");
 	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
-	const taskTitle = newElement("h2", "title", ...Array(1), "All");
+	const taskTitle = newElement("h2", "title", ...Array(1), mainListObj.projectName);
 	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
 
 	const addProjectDiv = newElement("div", ...Array(1), "add-project-div");
@@ -83,7 +86,7 @@ function recall() {
 			taskDiv.appendChild(restoredTask);
 		}
 	}
-	
+
 	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
 	staticTaskCount();
 }

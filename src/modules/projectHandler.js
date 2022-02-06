@@ -5,8 +5,8 @@ import { deletingTaskCount } from "./taskCountTracking";
 
 function newProject(obj) {
 	const name = obj.projectName;
-	const storageKey = obj.key
-	const numberOfTasks = obj.numberOfTasks
+	const storageKey = obj.key;
+	const numberOfTasks = obj.numberOfTasks;
 
 	const modifiedNameForID = name.replace(/\s/g, "");
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
@@ -81,9 +81,9 @@ function removeAllTasks(storageKey) {
 		let taskKey = localStorage.key(i);
 		let taskObject = pageState.getStorage(taskKey);
 		if (taskObject["type"] == "task" && taskObject["projectName"] == projectName) {
-			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`)
-			mainTaskDiv.removeChild(deletedTask)
-			deletingTaskCount(projectName)
+			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`);
+			mainTaskDiv.removeChild(deletedTask);
+			deletingTaskCount(projectName);
 			tasks().deleteTask(taskKey);
 		}
 	}
@@ -93,6 +93,8 @@ function displayNewProjectWindow(storageKey = null) {
 	const newProjectContainer = newElement("div", ...Array(1), "new-project-form-container");
 	const newProjectDiv = newElement("div", ...Array(1), "new-project-form-div");
 	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Project");
+	const error = newElement("div", ...Array(1), "project-name-error");
+	const projectForm = newElement("form", ...Array(1), "project-form");
 	const projectNameInputLabel = newElement("label", "form-labels", ...Array(1), "Name:");
 	const projectNameInput = newElement("input", "form-input", "project-name-input");
 	projectNameInput.type = "text";
@@ -110,32 +112,72 @@ function displayNewProjectWindow(storageKey = null) {
 
 	newProjectContainer.appendChild(newProjectDiv);
 	newProjectDiv.appendChild(title);
-	newProjectDiv.appendChild(projectNameInputLabel);
-	newProjectDiv.appendChild(projectNameInput);
-	newProjectDiv.appendChild(buttonSelectorDiv);
-	buttonSelectorDiv.appendChild(cancelButton);
-	buttonSelectorDiv.appendChild(submitButton);
+	newProjectDiv.appendChild(error);
+	newProjectDiv.appendChild(projectForm);
+	projectForm.appendChild(projectNameInputLabel);
+	projectForm.appendChild(projectNameInput);
+	projectForm.appendChild(buttonSelectorDiv);
+	projectForm.appendChild(cancelButton);
+	projectForm.appendChild(submitButton);
+
+	projectForm.addEventListener("submit", (e) => {
+		const errorField = document.getElementById("project-name-error");
+		const projectsDiv = document.getElementById("projects-div");
+		let messages = [];
+		let projectNameValue = projectNameInput.value;
+		if (projectNameValue.toLowerCase() == "all") {
+			messages.push("Cannot use 'All' as a project name");
+			e.preventDefault();
+		}
+		if (projectNameValue === "" || projectNameValue == null) {
+			messages.push("Name is required");
+			e.preventDefault();
+		}
+		if (messages.length > 0) {
+			e.preventDefault();
+			errorField.textContent = messages.join(", ");
+		} else {
+			let instantiateProjectObject = projects(projectNameValue);
+			if (storageKey) {
+				const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
+				updateProjectDiv.childNodes[0].textContent = projectNameValue;
+				instantiateProjectObject.update(storageKey, projectNameValue);
+			} else {
+				let newProjectObject = instantiateProjectObject.create();
+				let newElement = newProject(newProjectObject);
+				projectsDiv.appendChild(newElement);
+			}
+
+			closeWindow(newProjectContainer);
+		}
+	});
 
 	cancelButton.addEventListener("click", function () {
 		closeWindow(newProjectContainer);
 	});
 
-	submitButton.addEventListener("click", function () {
-		const projectsDiv = document.getElementById("projects-div");
-		let projectNameValue = projectNameInput.value;
-		let instantiateProjectObject = projects(projectNameValue);
-		if (storageKey) {
-			const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
-			updateProjectDiv.childNodes[0].textContent = projectNameValue;
-			instantiateProjectObject.update(storageKey, projectNameValue);
-		} else {
-			let newProjectObject = instantiateProjectObject.create();
-			let newProject = newProject(newProjectObject)
-			projectsDiv.appendChild(newProject);
-		}
+	// submitButton.addEventListener("click", function () {
+	// 	const projectsDiv = document.getElementById("projects-div");
+	// 	const formField = document.getElementById("project-name-input");
+	// 	let projectNameValue = projectNameInput.value;
+	// 	if(projectNameValue.toLowerCase() == "all"){
+	// 		submitButton.setCustomValidity("Invalid field.");
+	// 		submitButton.setCustomValidity("");
+	// 		submitButton.reportValidity();
+	// 	}
+	// 	let instantiateProjectObject = projects(projectNameValue);
+	// 	if (storageKey) {
+	// 		const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
+	// 		updateProjectDiv.childNodes[0].textContent = projectNameValue;
+	// 		instantiateProjectObject.update(storageKey, projectNameValue);
+	// 	} else {
+	// 		let newProjectObject = instantiateProjectObject.create();
+	// 		let newElement = newProject(newProjectObject)
+	// 		projectsDiv.appendChild(newElement);
+	// 	}
 
-		closeWindow(newProjectContainer);
-	});
+	// 	closeWindow(newProjectContainer);
+	// });
 
 	return newProjectContainer;
 }

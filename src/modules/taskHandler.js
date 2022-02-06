@@ -117,14 +117,16 @@ function displayNewTaskWindow(storageKey = null) {
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
 	const projectNameSelect = newElement("select", "form-selection", "project-name-selection");
-	const dataAtts = document.getElementsByClassName("project-list");
-	Array.from(dataAtts).forEach((d) => {
-		const projectNameSelectOption = newElement("option");
-		const nameFromStorage = pageState.getStorage(d.dataset.value);
-		projectNameSelectOption.setAttribute("value", nameFromStorage.projectName);
-		projectNameSelectOption.textContent = nameFromStorage.projectName;
-		projectNameSelect.appendChild(projectNameSelectOption);
-	});
+	for (let i = 0; localStorage.key(i); i++) {
+		let storageKey = localStorage.key(i);
+		let storageObject = pageState.getStorage(storageKey);
+		if (storageObject["type"] == "project") {
+			const projectNameSelectOption = newElement("option");
+			projectNameSelectOption.setAttribute("value", storageObject["projectName"]);
+			projectNameSelectOption.textContent = storageObject["projectName"];
+			projectNameSelect.appendChild(projectNameSelectOption);
+		}
+	}
 
 	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
 	projectNameSelectLabel.setAttribute("for", "project-name-selection");
@@ -274,7 +276,7 @@ function displayNewTaskWindow(storageKey = null) {
 			updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
 			updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
 			updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
-			let oldProjectName = pageState.getStorage(storageKey)['projectName']
+			let oldProjectName = pageState.getStorage(storageKey)["projectName"];
 			dynamicTaskCount(taskProjectNameValue, storageKey, oldProjectName);
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
