@@ -4,11 +4,13 @@ import { pageState } from "./storage";
 
 function staticTaskCount() {
 	const projectsDiv = document.getElementById("projects-div");
+	const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
 
 	//First, reset all task counts to zero, then calculate from storage
 	for (let p = 1; p < projectsDiv.childNodes.length; p++) {
 		projectsDiv.childNodes[p].childNodes[1].textContent = 0;
 	}
+
 	
 	for (let i = 0; i < localStorage.length; i++) {
 		let storageKey = localStorage.key(i);
@@ -27,6 +29,7 @@ function staticTaskCount() {
 
 function dynamicTaskCount(projectName, storageKey = null, oldProject = null) {
 	const projectsDiv = document.getElementById("projects-div");
+	const updateProjectDiv = document.body.querySelector(`.project-list[data-value=${storageKey}]`);
 
 	for (let p = 0; p < projectsDiv.childNodes.length; p++) {
 		//To prevent decrementing the total number of tasks for editing existing task group

@@ -1,6 +1,4 @@
 import { pageState } from "./storage";
-import { newTask } from "./taskHandler";
-import { newProject } from "./projectHandler";
 
 const projects = (name) => {
 	const type = "project";
@@ -113,6 +111,7 @@ const tasks = (task, project, notes, day, time) => {
 			{},
 			{
 				key: storageKey,
+				projectKey:"P0",
 				type: type,
 				projectName: project,
 				taskName: task,
@@ -124,7 +123,6 @@ const tasks = (task, project, notes, day, time) => {
 		);
 
 		store(storageKey, taskObject);
-		// return newTask(storageKey, project, task, notes, day, time, complete);
 		return taskObject;
 	};
 

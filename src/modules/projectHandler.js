@@ -12,7 +12,7 @@ function newProject(obj) {
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
 	newProject.setAttribute("data-value", storageKey);
 	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
-	const numberOfTasksElement = newElement("span", "number-of-tasks", ...Array(1), `${numberOfTasks}`);
+	const numberOfTasksElement = newElement("span", "number-of-tasks", `${storageKey}-task-count`, `${numberOfTasks}`);
 
 	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
 	moreInfoIcon.classList.add("more-info-icon");
@@ -123,15 +123,14 @@ function displayNewProjectWindow(storageKey = null) {
 	projectForm.addEventListener("submit", (e) => {
 		const errorField = document.getElementById("project-name-error");
 		const projectsDiv = document.getElementById("projects-div");
+		
 		let messages = [];
 		let projectNameValue = projectNameInput.value;
 		if (projectNameValue.toLowerCase() == "all") {
 			messages.push("Cannot use 'All' as a project name");
-			e.preventDefault();
 		}
 		if (projectNameValue === "" || projectNameValue == null) {
 			messages.push("Name is required");
-			e.preventDefault();
 		}
 		if (messages.length > 0) {
 			e.preventDefault();

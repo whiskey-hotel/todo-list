@@ -14,7 +14,6 @@ function home() {
 	mainList.setAttribute("data-value", "P0");
 	const instantiateMainProject = projects("All");
 	let mainListObj = instantiateMainProject.create();
-	// pageState.populateProjectStorage("P0", "All", 0, "project");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), mainListObj.numberOfTasks);
 
