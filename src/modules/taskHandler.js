@@ -3,7 +3,15 @@ import { tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { dynamicTaskCount, deletingTaskCount } from "./taskCountTracking";
 
-function newTask(storageKey, project, task, notes = "", day = "", time = "", complete) {
+function newTask(obj) {
+	let storageKey = obj.key;
+	let project = obj.projectName;
+	let task = obj.taskName; 
+	let notes = obj.notes 
+	let day = obj.day; 
+	let time = obj.time; 
+	let complete = obj.complete;
+
 	const newTask = newElement("div", "task-list");
 	newTask.setAttribute("data-value", storageKey);
 	const newTaskCheckMark = newElement("input", "task-checkmark");
@@ -21,7 +29,8 @@ function newTask(storageKey, project, task, notes = "", day = "", time = "", com
 
 	newTaskCheckMark.addEventListener("click", function () {
 		complete = !complete;
-		tasks(task, project, notes, day, time).store(storageKey, "task", complete);
+		obj.complete = complete;
+		tasks().store(storageKey, obj);
 
 		if (complete) {
 			newTaskCheckMark.checked;
@@ -280,8 +289,9 @@ function displayNewTaskWindow(storageKey = null) {
 			dynamicTaskCount(taskProjectNameValue, storageKey, oldProjectName);
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
-			let newTask = instantiateTaskObject.create();
-			taskDiv.appendChild(newTask);
+			let newTaskObject = instantiateTaskObject.create();
+			let newElement = newTask(newTaskObject)
+			taskDiv.appendChild(newElement);
 		}
 
 		closeWindow(newTaskContainer);

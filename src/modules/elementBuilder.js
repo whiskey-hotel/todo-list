@@ -73,16 +73,7 @@ function recall() {
 			projectsDiv.appendChild(restoredProject);
 		} else if (storageObject["type"] == "task") {
 			totalNumberOfTasks += 1;
-
-			let restoredTask = newTask(
-				storageKey,
-				storageObject["projectName"],
-				storageObject["taskName"],
-				storageObject["notes"],
-				storageObject["day"],
-				storageObject["time"],
-				storageObject["complete"]
-			);
+			let restoredTask = newTask(storageObject);
 			taskDiv.appendChild(restoredTask);
 		}
 	}

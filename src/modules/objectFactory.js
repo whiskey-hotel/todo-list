@@ -41,29 +41,22 @@ const projects = (name) => {
 	};
 
 	const update = function (key, projectName) {
-		let datbaseObj = pageState.getStorage(key);
-		let oldProjectName = datbaseObj.projectName;
-		let newProject = Object.assign({},datbaseObj)
-		newProject.projectName = projectName
+		let databaseObj = pageState.getStorage(key);
+		let oldProjectName = databaseObj.projectName;
+		let newProject = Object.assign({}, databaseObj);
+		newProject.projectName = projectName;
 
 		for (let i = 0; i < localStorage.length; i++) {
 			let storageKey = localStorage.key(i);
 			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject["type"] == "task" && storageObject["projectName"] == oldProjectName) {
-				pageState.populateTaskStorage(
-					storageKey,
-					projectName,
-					storageObject["taskName"],
-					storageObject["notes"],
-					storageObject["day"],
-					storageObject["time"],
-					storageObject["type"],
-					storageObject["complete"]
-				);
+			if (storageObject.type == "task" && storageObject.projectName == oldProjectName) {
+				let renamedProjectForTask = Object.assign({}, storageObject);
+				renamedProjectForTask.projectName = projectName;
+				pageState.populateTaskStorage(storageKey, renamedProjectForTask);
 			}
 		}
 
-		datbaseObj && pageState.populateProjectStorage(key, newProject);
+		databaseObj && pageState.populateProjectStorage(key, newProject);
 
 		return;
 	};
@@ -95,20 +88,55 @@ const projects = (name) => {
 	return { getName, create, update, deleteProject, updateNumberOfTasks };
 };
 
-const tasks = (task, project = "All", notes = "", day = "", time = "") => {
+/*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+
+const tasks = (task, project, notes, day, time) => {
 	const type = "task";
 	let complete = false;
 
 	const create = function () {
 		let storageKey = keyGenerator();
-		store(storageKey, type, complete);
-		return newTask(storageKey, project, task, notes, day, time, complete);
+		let taskObject = Object.assign(
+			{},
+			{
+				key: storageKey,
+				type: type,
+				projectName: project,
+				taskName: task,
+				notes: notes,
+				day: day,
+				time: time,
+				complete: complete,
+			}
+		);
+
+		store(storageKey, taskObject);
+		// return newTask(storageKey, project, task, notes, day, time, complete);
+		return taskObject;
 	};
 
-	const update = function (key, projectName, taskTitle, notes, day, time) {
+	const update = function (key, projectName, taskName, notes, day, time) {
 		let datbaseObj = pageState.getStorage(key);
+		let newTask = Object.assign({}, datbaseObj);
+		newTask.projectName = projectName;
+		newTask.taskName = taskName;
+		newTask.notes = notes;
+		newTask.day = day;
+		newTask.time = time;
 
-		datbaseObj && pageState.populateTaskStorage(key, projectName, taskTitle, notes, day, time, datbaseObj["type"], datbaseObj["complete"]);
+		datbaseObj && pageState.populateTaskStorage(key, newTask);
 
 		return;
 	};
@@ -129,8 +157,8 @@ const tasks = (task, project = "All", notes = "", day = "", time = "") => {
 		return key;
 	};
 
-	const store = function (key, type, complete) {
-		pageState.populateTaskStorage(key, project, task, notes, day, time, type, complete);
+	const store = function (key, obj) {
+		pageState.populateTaskStorage(key, obj);
 	};
 
 	return { create, update, deleteTask, store };
