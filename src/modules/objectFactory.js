@@ -10,8 +10,18 @@ const projects = (name) => {
 
 	const create = function () {
 		let storageKey = keyGenerator();
-		store(storageKey, name, numberOfTasks, type);
-		return newProject(name, storageKey, numberOfTasks);
+		let projectObject = Object.assign(
+			{},
+			{
+				key: storageKey,
+				type: type,
+				projectName: name,
+				numberOfTasks: 0,
+			}
+		);
+		store(storageKey, projectObject);
+		// return newProject(name, storageKey, numberOfTasks);
+		return projectObject;
 	};
 
 	const update = function (key, projectName) {
@@ -60,8 +70,8 @@ const projects = (name) => {
 		return key;
 	};
 
-	const store = function (key, projectName, numberOfTasks, type) {
-		pageState.populateProjectStorage(key, projectName, numberOfTasks, type);
+	const store = function (key, obj) {
+		pageState.populateProjectStorage(key, obj);
 	};
 
 	return { getName, create, update, deleteProject, updateNumberOfTasks };

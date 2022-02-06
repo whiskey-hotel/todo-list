@@ -1,9 +1,13 @@
-import { newElement, sendToBody } from "./DOMController";
+import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { deletingTaskCount } from "./taskCountTracking";
 
-function newProject(name, storageKey, numberOfTasks) {
+function newProject(obj) {
+	const name = obj.projectName;
+	const storageKey = obj.key
+	const numberOfTasks = obj.numberOfTasks
+
 	const modifiedNameForID = name.replace(/\s/g, "");
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
 	newProject.setAttribute("data-value", storageKey);
@@ -125,7 +129,8 @@ function displayNewProjectWindow(storageKey = null) {
 			updateProjectDiv.childNodes[0].textContent = projectNameValue;
 			instantiateProjectObject.update(storageKey, projectNameValue);
 		} else {
-			let newProject = instantiateProjectObject.create();
+			let newProjectObject = instantiateProjectObject.create();
+			let newProject = newProject(newProjectObject)
 			projectsDiv.appendChild(newProject);
 		}
 

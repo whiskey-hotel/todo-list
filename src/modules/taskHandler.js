@@ -1,4 +1,4 @@
-import { newElement, sendToBody } from "./DOMController";
+import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { dynamicTaskCount, deletingTaskCount } from "./taskCountTracking";

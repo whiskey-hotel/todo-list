@@ -66,7 +66,7 @@ function recall() {
 		let storageKey = localStorage.key(i);
 		let storageObject = pageState.getStorage(storageKey);
 		if (storageObject["type"] == "project" && storageKey != "P0") {
-			let restoredProject = newProject(storageObject["projectName"], storageKey, storageObject["numberOfTasks"]);
+			let restoredProject = newProject(storageObject);
 			projectsDiv.appendChild(restoredProject);
 		} else if (storageObject["type"] == "task") {
 			totalNumberOfTasks += 1;

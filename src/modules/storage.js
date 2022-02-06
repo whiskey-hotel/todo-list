@@ -1,12 +1,8 @@
 const pageState = (() => {
-	const populateProjectStorage = (objectKey = "projects", name, count, type) => {
+	const populateProjectStorage = (objectKey, objectValues) => {
 		localStorage.setItem(
 			objectKey,
-			JSON.stringify({
-                type: type,
-				projectName: name,
-				numberOfTasks: count,
-			})
+			JSON.stringify(objectValues)
 		);
 	};
 
