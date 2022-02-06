@@ -63,8 +63,15 @@ const projects = (name) => {
 		pageState.deleteStorage(key);
 	};
 
-	const updateNumberOfTasks = function (count) {
-		totalNumberOfTasks += count;
+	const updateNumberOfTasks = function (key, dec = null) {
+		let storageObject = pageState.getStorage(key);
+		if (dec) {
+			--storageObject.numberOfTasks;
+		} else {
+			++storageObject.numberOfTasks;
+		}
+		store(key, storageObject);
+		// totalNumberOfTasks += 1;
 	};
 
 	const keyGenerator = function (letter) {
@@ -87,21 +94,21 @@ const projects = (name) => {
 };
 
 /*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*/
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
-const tasks = (task, project, notes, day, time) => {
-	const {store, keyGenerator} = projects(project)
+const tasks = (task, project, projectKey = "P0", notes, day, time) => {
+	const { store, keyGenerator } = projects(project);
 	const type = "task";
 	let complete = false;
 
@@ -111,7 +118,7 @@ const tasks = (task, project, notes, day, time) => {
 			{},
 			{
 				key: storageKey,
-				projectKey:"P0",
+				projectKey: projectKey,
 				type: type,
 				projectName: project,
 				taskName: task,
@@ -126,10 +133,11 @@ const tasks = (task, project, notes, day, time) => {
 		return taskObject;
 	};
 
-	const update = function (key, projectName, taskName, notes, day, time) {
+	const update = function (key, projectName, projectKey, taskName, notes, day, time) {
 		let datbaseObj = pageState.getStorage(key);
 		let newTask = Object.assign({}, datbaseObj);
 		newTask.projectName = projectName;
+		newTask.projectKey = projectKey;
 		newTask.taskName = taskName;
 		newTask.notes = notes;
 		newTask.day = day;

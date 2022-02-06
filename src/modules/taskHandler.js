@@ -1,15 +1,15 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
-import { tasks } from "./objectFactory";
+import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
-import { dynamicTaskCount, deletingTaskCount } from "./taskCountTracking";
+import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask} from "./taskCountTracking";
 
 function newTask(obj) {
 	let storageKey = obj.key;
 	let project = obj.projectName;
-	let task = obj.taskName; 
-	let notes = obj.notes 
-	let day = obj.day; 
-	let time = obj.time; 
+	let task = obj.taskName;
+	let notes = obj.notes;
+	let day = obj.day;
+	let time = obj.time;
 	let complete = obj.complete;
 
 	const newTask = newElement("div", "task-list");
@@ -38,8 +38,6 @@ function newTask(obj) {
 			newTaskCheckMark.checked = false;
 		}
 	});
-
-	dynamicTaskCount(project);
 
 	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
 	moreInfoIcon.classList.add("more-info-icon");
@@ -95,11 +93,10 @@ function dropDownOption(storageKey) {
 	deleteButton.addEventListener("click", function () {
 		const mainTaskDiv = document.getElementById("main-task-div");
 		const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
-		let projectName = pageState.getStorage(storageKey)["projectName"];
-		deletingTaskCount(projectName);
+		let projectKey = pageState.getStorage(storageKey).projectKey;
+		updateDOMForDeletingTask(projectKey)
 		tasks().deleteTask(storageKey);
 		mainTaskDiv.removeChild(deletedTask);
-		// newTask.removeChild(dropDownDiv);
 	});
 
 	dropDownDiv.appendChild(updateButton);
@@ -131,8 +128,9 @@ function displayNewTaskWindow(storageKey = null) {
 		let storageObject = pageState.getStorage(storageKey);
 		if (storageObject["type"] == "project") {
 			const projectNameSelectOption = newElement("option");
-			projectNameSelectOption.setAttribute("value", storageObject["projectName"]);
-			projectNameSelectOption.textContent = storageObject["projectName"];
+			projectNameSelectOption.setAttribute("value", storageObject.projectName);
+			projectNameSelectOption.setAttribute("data", storageObject.key);
+			projectNameSelectOption.textContent = storageObject.projectName;
 			projectNameSelect.appendChild(projectNameSelectOption);
 		}
 	}
@@ -269,6 +267,10 @@ function displayNewTaskWindow(storageKey = null) {
 		const taskDiv = document.getElementById("main-task-div");
 		let taskNameValue = taskNameInput.value;
 		let taskProjectNameValue = projectNameSelect.value;
+
+		let option = projectNameSelect.options[projectNameSelect.selectedIndex];
+		let taskProjectKey = option.attributes.data.value;
+
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
 		let taskTimeValue = "";
@@ -278,19 +280,24 @@ function displayNewTaskWindow(storageKey = null) {
 		if (timeInput) {
 			taskTimeValue = timeInput.value;
 		}
-		let instantiateTaskObject = tasks(taskNameValue, taskProjectNameValue, taskNotesValue, taskDateValue, taskTimeValue);
+		let instantiateTaskObject = tasks(taskNameValue, taskProjectNameValue, taskProjectKey, taskNotesValue, taskDateValue, taskTimeValue);
 		if (storageKey) {
 			const updateTaskDiv = document.querySelector(`.task-list[data-value=${storageKey}]`).childNodes[1];
 			updateTaskDiv.childNodes[0].textContent = taskNameValue;
 			updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
 			updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
 			updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
-			let oldProjectName = pageState.getStorage(storageKey)["projectName"];
-			dynamicTaskCount(taskProjectNameValue, storageKey, oldProjectName);
-			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
+			let oldKey = pageState.getStorage(storageKey).projectKey;
+			let newKey = taskProjectKey;
+			updateDOMForExistingTask(newKey, oldKey);
+			projects().updateNumberOfTasks(newKey);
+			projects().updateNumberOfTasks(oldKey, "decrement");
+			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskProjectKey, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
 			let newTaskObject = instantiateTaskObject.create();
-			let newElement = newTask(newTaskObject)
+			let newElement = newTask(newTaskObject);
+			projects().updateNumberOfTasks(newTaskObject.projectKey);
+			updateDOMForNewTask(newTaskObject.projectKey);
 			taskDiv.appendChild(newElement);
 		}
 

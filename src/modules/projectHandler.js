@@ -1,7 +1,7 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
-import { deletingTaskCount } from "./taskCountTracking";
+import { updateDOMForDeletingTask } from "./taskCountTracking";
 
 function newProject(obj) {
 	const name = obj.projectName;
@@ -83,7 +83,7 @@ function removeAllTasks(storageKey) {
 		if (taskObject["type"] == "task" && taskObject["projectName"] == projectName) {
 			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`);
 			mainTaskDiv.removeChild(deletedTask);
-			deletingTaskCount(projectName);
+			updateDOMForDeletingTask(taskObject.projectKey)
 			tasks().deleteTask(taskKey);
 		}
 	}

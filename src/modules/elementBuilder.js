@@ -15,7 +15,7 @@ function home() {
 	const instantiateMainProject = projects("All");
 	let mainListObj = instantiateMainProject.create();
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
-	const numberOfTasks = newElement("span", "number-of-tasks", ...Array(1), mainListObj.numberOfTasks);
+	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, mainListObj.numberOfTasks);
 
 	const taskContainer = newElement("div", "task-container");
 	const taskDiv = newElement("div", ...Array(1), "task-div");
@@ -78,7 +78,6 @@ function recall() {
 	}
 
 	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
-	staticTaskCount();
 }
 
 export { home, recall };
