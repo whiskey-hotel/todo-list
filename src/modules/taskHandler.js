@@ -95,6 +95,7 @@ function dropDownOption(storageKey) {
 		const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
 		let projectKey = pageState.getStorage(storageKey).projectKey;
 		updateDOMForDeletingTask(projectKey);
+		projects().updateNumberOfTasks(projectKey, "decrement");
 		tasks().deleteTask(storageKey);
 		mainTaskDiv.removeChild(deletedTask);
 	});
