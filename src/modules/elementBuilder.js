@@ -56,21 +56,22 @@ function home() {
 	});
 
 	mainList.addEventListener("click", function (e) {
-		const parent = document.getElementById("main-task-div");
-		removeAllChildNodes(parent);
-
 		let dataValue = e.target.dataset.value;
 		let projectObj = pageState.getStorage(dataValue);
+		if (projectObj) {
+			const parent = document.getElementById("main-task-div");
+			removeAllChildNodes(parent);
 
-		const title = document.getElementById("project-title-for-task-list");
-		title.textContent = projectObj.projectName;
+			const title = document.getElementById("project-title-for-task-list");
+			title.textContent = projectObj.projectName;
 
-		for (let i = 0; localStorage.key(i); i++) {
-			let storageKey = localStorage.key(i);
-			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject.type == "task" ) {
-				let restoredTask = newTask(storageObject);
-				parent.appendChild(restoredTask)
+			for (let i = 0; localStorage.key(i); i++) {
+				let storageKey = localStorage.key(i);
+				let storageObject = pageState.getStorage(storageKey);
+				if (storageObject.type == "task") {
+					let restoredTask = newTask(storageObject);
+					parent.appendChild(restoredTask);
+				}
 			}
 		}
 	});
