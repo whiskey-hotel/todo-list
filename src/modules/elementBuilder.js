@@ -1,4 +1,4 @@
-import { newElement, sendToBody } from "./DOMController";
+import { newElement, sendToBody, removeAllChildNodes } from "./DOMController";
 import { newTask, displayNewTaskWindow } from "./taskHandler";
 import { newProject, displayNewProjectWindow } from "./projectHandler";
 import { pageState } from "./storage";
@@ -20,7 +20,7 @@ function home() {
 	const taskContainer = newElement("div", "task-container");
 	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
-	const taskTitle = newElement("h2", "title", ...Array(1), mainListObj.projectName);
+	const taskTitle = newElement("h2", "title", "project-title-for-task-list", mainListObj.projectName);
 	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
 
 	const addProjectDiv = newElement("div", ...Array(1), "add-project-div");
@@ -53,6 +53,26 @@ function home() {
 
 	addTaskIcon.addEventListener("click", function () {
 		sendToBody(displayNewTaskWindow());
+	});
+
+	mainList.addEventListener("click", function (e) {
+		const parent = document.getElementById("main-task-div");
+		removeAllChildNodes(parent);
+
+		let dataValue = e.target.dataset.value;
+		let projectObj = pageState.getStorage(dataValue);
+
+		const title = document.getElementById("project-title-for-task-list");
+		title.textContent = projectObj.projectName;
+
+		for (let i = 0; localStorage.key(i); i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject.type == "task" ) {
+				let restoredTask = newTask(storageObject);
+				parent.appendChild(restoredTask)
+			}
+		}
 	});
 
 	return { projectsContainer, taskContainer };

@@ -1,7 +1,8 @@
-import { newElement, sendToBody, closeWindow } from "./DOMController";
+import { newElement, sendToBody, closeWindow, removeAllChildNodes } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { updateDOMForDeletingTask } from "./taskCountTracking";
+import { newTask } from "./taskHandler";
 
 function newProject(obj) {
 	const name = obj.projectName;
@@ -27,6 +28,26 @@ function newProject(obj) {
 	moreInfoIcon.addEventListener("click", function () {
 		const dropDownDiv = dropDownOption(storageKey);
 		newProject.appendChild(dropDownDiv);
+	});
+
+	newProject.addEventListener("click", function (e) {
+		const parent = document.getElementById("main-task-div");
+		removeAllChildNodes(parent);
+
+		let dataValue = e.target.dataset.value;
+		let projectObj = pageState.getStorage(dataValue);
+
+		const title = document.getElementById("project-title-for-task-list");
+		title.textContent = projectObj.projectName;
+
+		for (let i = 0; localStorage.key(i); i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject.type == "task" && storageObject.projectKey == projectObj.key) {
+				let restoredTask = newTask(storageObject);
+				parent.appendChild(restoredTask);
+			}
+		}
 	});
 
 	newProject.appendChild(newListTitle);
@@ -83,7 +104,7 @@ function removeAllTasks(storageKey) {
 		if (taskObject["type"] == "task" && taskObject["projectName"] == projectName) {
 			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`);
 			mainTaskDiv.removeChild(deletedTask);
-			updateDOMForDeletingTask(taskObject.projectKey)
+			updateDOMForDeletingTask(taskObject.projectKey);
 			tasks().deleteTask(taskKey);
 		}
 	}
@@ -123,7 +144,7 @@ function displayNewProjectWindow(storageKey = null) {
 	projectForm.addEventListener("submit", (e) => {
 		const errorField = document.getElementById("project-name-error");
 		const projectsDiv = document.getElementById("projects-div");
-		
+
 		let messages = [];
 		let projectNameValue = projectNameInput.value;
 		if (projectNameValue.toLowerCase() == "all") {

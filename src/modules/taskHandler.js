@@ -318,47 +318,6 @@ function displayNewTaskWindow(storageKey = null) {
 		}
 	});
 
-	// submitButton.addEventListener("click", function () {
-	// 	const taskDiv = document.getElementById("main-task-div");
-	// 	let taskNameValue = taskNameInput.value;
-	// 	let taskProjectNameValue = projectNameSelect.value;
-
-	// 	let option = projectNameSelect.options[projectNameSelect.selectedIndex];
-	// 	let taskProjectKey = option.attributes.data.value;
-
-	// 	let taskNotesValue = taskNotesInput.value;
-	// 	let taskDateValue = "";
-	// 	let taskTimeValue = "";
-	// 	if (dateInput) {
-	// 		taskDateValue = dateInput.value;
-	// 	}
-	// 	if (timeInput) {
-	// 		taskTimeValue = timeInput.value;
-	// 	}
-	// 	let instantiateTaskObject = tasks(taskNameValue, taskProjectNameValue, taskProjectKey, taskNotesValue, taskDateValue, taskTimeValue);
-	// 	if (storageKey) {
-	// 		const updateTaskDiv = document.querySelector(`.task-list[data-value=${storageKey}]`).childNodes[1];
-	// 		updateTaskDiv.childNodes[0].textContent = taskNameValue;
-	// 		updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
-	// 		updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
-	// 		updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
-	// 		let oldKey = pageState.getStorage(storageKey).projectKey;
-	// 		let newKey = taskProjectKey;
-	// 		updateDOMForExistingTask(newKey, oldKey);
-	// 		projects().updateNumberOfTasks(newKey);
-	// 		projects().updateNumberOfTasks(oldKey, "decrement");
-	// 		instantiateTaskObject.update(storageKey, taskProjectNameValue, taskProjectKey, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
-	// 	} else {
-	// 		let newTaskObject = instantiateTaskObject.create();
-	// 		let newElement = newTask(newTaskObject);
-	// 		projects().updateNumberOfTasks(newTaskObject.projectKey);
-	// 		updateDOMForNewTask(newTaskObject.projectKey);
-	// 		taskDiv.appendChild(newElement);
-	// 	}
-
-	// 	closeWindow(newTaskContainer);
-	// });
-
 	return newTaskContainer;
 }
 
