@@ -2,7 +2,7 @@ import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask } from "./taskCountTracking";
-import format from "date-fns/format";
+import { dateFormatter, timeFormatter } from "./dateTime";
 
 function newTask(obj) {
 	let storageKey = obj.key;
@@ -12,6 +12,13 @@ function newTask(obj) {
 	let day = obj.day;
 	let time = obj.time;
 	let complete = obj.complete;
+
+	if (day) {
+		day = dateFormatter(day);
+	}
+	if (time) {
+		time = timeFormatter(time);
+	}
 
 	const newTask = newElement("div", "task-list");
 	newTask.setAttribute("data-value", storageKey);
@@ -197,11 +204,7 @@ function displayNewTaskWindow(storageKey = null) {
 			dateRadioYes.checked = true;
 			dateRadioNo.checked = false;
 			dateInput.disabled = false;
-			let reFormatArray = pageState.getStorage(`${storageKey}`).day.split("/");
-			let month = reFormatArray[0].padStart(2, '0');
-			let day = reFormatArray[1].padStart(2, '0');
-			let year = reFormatArray[2];
-			dateInput.value = `${year}-${month}-${day}`;
+			dateInput.value = pageState.getStorage(`${storageKey}`).day;
 		}
 		if (pageState.getStorage(`${storageKey}`).time) {
 			timeRadioYes.checked = true;
@@ -292,13 +295,7 @@ function displayNewTaskWindow(storageKey = null) {
 		let taskTimeValue = "";
 
 		if (dateInput && dateRadioNo.checked == false) {
-			let reFormatArray = dateInput.value.split("-");
-			let year = reFormatArray[0];
-			let month = reFormatArray[1].replace(/^0+/, "") - 1; //month is zero indexed;
-			let day = reFormatArray[2].replace(/^0+/, "");
-			console.log(new Date(year, month, day));
-			taskDateValue = format(new Date(year, month, day), "M/d/yyyy");
-			console.log(taskDateValue);
+			taskDateValue = dateInput.value;
 		}
 		if (timeInput && timeRadioNo.checked == false) {
 			taskTimeValue = timeInput.value;
@@ -317,8 +314,8 @@ function displayNewTaskWindow(storageKey = null) {
 				const updateTaskDiv = document.querySelector(`.task-list[data-value=${storageKey}]`).childNodes[1];
 				updateTaskDiv.childNodes[0].textContent = taskNameValue;
 				updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
-				updateTaskDiv.childNodes[2].childNodes[0].textContent = taskDateValue;
-				updateTaskDiv.childNodes[2].childNodes[1].textContent = taskTimeValue;
+				updateTaskDiv.childNodes[2].childNodes[0].textContent = dateFormatter(taskDateValue);
+				updateTaskDiv.childNodes[2].childNodes[1].textContent = timeFormatter(taskTimeValue);
 				let oldKey = pageState.getStorage(storageKey).projectKey;
 				let newKey = taskProjectKey;
 				updateDOMForExistingTask(newKey, oldKey);
