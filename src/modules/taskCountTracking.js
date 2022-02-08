@@ -27,5 +27,9 @@ function updateDOMForDeletingTask(key) {
 	}
 }
 
+function updateDOMForTotalCompletedTasks() {
+	const allTaskCounter = document.getElementById("completed-task-count");
+	++allTaskCounter.textContent;
+}
 
-export { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask };
+export { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks };

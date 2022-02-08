@@ -21,6 +21,10 @@ function home() {
 	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
 	const taskTitle = newElement("h2", "title", "project-title-for-task-list", mainListObj.projectName);
+	const completedDiv = newElement("div", ...Array(1), "completed-task-div");
+	const completedTasks = newElement("p", ...Array(2), "Completed Tasks:");
+	const countOfCompletedTasks = newElement("span", ...Array(1), "completed-task-count", "0");
+	const showCompletedTasks = newElement("p", ...Array(1), "show-hide-btn", "Show/Hide Completed Tasks");
 	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
 
 	const addProjectDiv = newElement("div", ...Array(1), "add-project-div");
@@ -43,6 +47,10 @@ function home() {
 	taskContainer.appendChild(taskDiv);
 	taskDiv.appendChild(taskHeader);
 	taskHeader.appendChild(taskTitle);
+	taskDiv.appendChild(completedDiv);
+	completedDiv.appendChild(completedTasks);
+	completedDiv.appendChild(countOfCompletedTasks);
+	completedDiv.appendChild(showCompletedTasks);
 	taskDiv.appendChild(taskListDiv);
 	taskContainer.appendChild(addTaskDiv);
 	addTaskDiv.appendChild(addTaskIcon);
@@ -76,10 +84,40 @@ function home() {
 		}
 	});
 
+	let showCompleted = false;
+	completedDiv.addEventListener("click", function () {
+		const projectsDiv = document.getElementById("projects-div");
+		const taskDiv = document.getElementById("main-task-div");
+		showCompleted = !showCompleted;
+		if (showCompleted) {
+			for (let i = 0; i < localStorage.length; i++) {
+				let storageKey = localStorage.key(i);
+				let storageObject = pageState.getStorage(storageKey);
+				if (storageObject["type"] == "task") {
+					if (storageObject["complete"]) {
+						let restoredTask = newTask(storageObject);
+						taskDiv.appendChild(restoredTask);
+					}
+				}
+			}
+		} else {
+			for (let i = 0; i < localStorage.length; i++) {
+				let storageKey = localStorage.key(i);
+				let storageObject = pageState.getStorage(storageKey);
+				if (storageObject["type"] == "task") {
+					if (storageObject["complete"]) {
+						let restoredTask = document.querySelector(`.task-list[data-value=${storageKey}`)
+						taskDiv.removeChild(restoredTask);
+					}
+				}
+			}
+		}
+	});
+
 	return { projectsContainer, taskContainer };
 }
 
-function recall() {
+function recall(selectedProject = null, completed = null) {
 	const projectsDiv = document.getElementById("projects-div");
 	const taskDiv = document.getElementById("main-task-div");
 	let totalNumberOfTasks = 0;
@@ -92,9 +130,11 @@ function recall() {
 			let restoredProject = newProject(storageObject);
 			projectsDiv.appendChild(restoredProject);
 		} else if (storageObject["type"] == "task") {
-			totalNumberOfTasks += 1;
-			let restoredTask = newTask(storageObject);
-			taskDiv.appendChild(restoredTask);
+			if (storageObject["complete"] == false) {
+				totalNumberOfTasks += 1;
+				let restoredTask = newTask(storageObject);
+				taskDiv.appendChild(restoredTask);
+			}
 		}
 	}
 

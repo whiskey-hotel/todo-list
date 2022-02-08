@@ -9,6 +9,7 @@
 	align-items: center;
 }
 
+#show-hide-btn,
 .number-of-tasks,
 .edit {
 	margin-left: auto;
@@ -20,11 +21,13 @@
 	align-items: center;
 }
 
+#completed-task-div,
 #add-project-div {
 	display: flex;
 	align-items: center;
 }
 
+#show-hide-btn,
 .drop-down-option,
 .more-info-icon,
 #add-task-icon,

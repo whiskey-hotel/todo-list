@@ -1,7 +1,7 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
-import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask } from "./taskCountTracking";
+import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks } from "./taskCountTracking";
 import { dateFormatter, timeFormatter } from "./dateTime";
 
 function newTask(obj) {
@@ -36,14 +36,23 @@ function newTask(obj) {
 	const newTasktime = newElement("p", "task-time", ...Array(1), time);
 
 	newTaskCheckMark.addEventListener("click", function () {
-		complete = !complete;
-		obj.complete = complete;
-		tasks().store(storageKey, obj);
+		complete = completed(complete, obj.key, obj);
+
+		const taskDiv = document.getElementById("main-task-div");
+		const taskChild = document.querySelector(`.task-list[data-value=${storageKey}`);
+		const timer1 = () => {
+			setTimeout(function () {
+				taskDiv.removeChild(taskChild);
+			}, 2000);
+		};
 
 		if (complete) {
 			newTaskCheckMark.checked;
+			updateDOMForTotalCompletedTasks();
+			timer1();
 		} else {
 			newTaskCheckMark.checked = false;
+			clearTimeout(timer1);
 		}
 	});
 
@@ -335,6 +344,13 @@ function displayNewTaskWindow(storageKey = null) {
 	});
 
 	return newTaskContainer;
+}
+
+function completed(completed, storageKey, obj) {
+	completed = !completed;
+	obj.complete = completed;
+	tasks().store(storageKey, obj);
+	return completed;
 }
 
 export { newTask, dropDownOption, displayNewTaskWindow };
