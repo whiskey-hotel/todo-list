@@ -2,6 +2,7 @@ import { newElement, sendToBody, closeWindow } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
 import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask } from "./taskCountTracking";
+import format from "date-fns/format";
 
 function newTask(obj) {
 	let storageKey = obj.key;
@@ -192,17 +193,21 @@ function displayNewTaskWindow(storageKey = null) {
 		taskNotesInput.value = pageState.getStorage(`${storageKey}`)["notes"];
 		projectNameSelect.value = pageState.getStorage(`${storageKey}`)["projectName"];
 
-		if (pageState.getStorage(`${storageKey}`)["day"]) {
+		if (pageState.getStorage(`${storageKey}`).day) {
 			dateRadioYes.checked = true;
 			dateRadioNo.checked = false;
 			dateInput.disabled = false;
-			dateInput.value = pageState.getStorage(`${storageKey}`)["day"];
+			let reFormatArray = pageState.getStorage(`${storageKey}`).day.split("/");
+			let month = reFormatArray[0].padStart(2, '0');
+			let day = reFormatArray[1].padStart(2, '0');
+			let year = reFormatArray[2];
+			dateInput.value = `${year}-${month}-${day}`;
 		}
-		if (pageState.getStorage(`${storageKey}`)["time"]) {
+		if (pageState.getStorage(`${storageKey}`).time) {
 			timeRadioYes.checked = true;
 			timeRadioNo.checked = false;
 			timeInput.disabled = false;
-			timeInput.value = pageState.getStorage(`${storageKey}`)["time"];
+			timeInput.value = pageState.getStorage(`${storageKey}`).time;
 		}
 	}
 
@@ -285,9 +290,15 @@ function displayNewTaskWindow(storageKey = null) {
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
 		let taskTimeValue = "";
-		
+
 		if (dateInput && dateRadioNo.checked == false) {
-			taskDateValue = dateInput.value;
+			let reFormatArray = dateInput.value.split("-");
+			let year = reFormatArray[0];
+			let month = reFormatArray[1].replace(/^0+/, "") - 1; //month is zero indexed;
+			let day = reFormatArray[2].replace(/^0+/, "");
+			console.log(new Date(year, month, day));
+			taskDateValue = format(new Date(year, month, day), "M/d/yyyy");
+			console.log(taskDateValue);
 		}
 		if (timeInput && timeRadioNo.checked == false) {
 			taskTimeValue = timeInput.value;
