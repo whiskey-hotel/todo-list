@@ -154,7 +154,7 @@ function displayNewTaskWindow(storageKey = null) {
 	dateRadioNoLabel.setAttribute("for", "dont-include-date");
 
 	const dateInput = newElement("input", "form-input", "task-date-input");
-	dateInput.type = "text";
+	dateInput.type = "date";
 	dateInput.disabled = true;
 	const dateInputLabel = newElement("label", "form-labels", ...Array(1), "Date:");
 	dateInputLabel.setAttribute("for", "task-date-input");
@@ -175,7 +175,7 @@ function displayNewTaskWindow(storageKey = null) {
 	timeRadioNoLabel.setAttribute("for", "dont-include-time");
 
 	const timeInput = newElement("input", "form-input", "task-time-input");
-	timeInput.type = "text";
+	timeInput.type = "time";
 	timeInput.disabled = true;
 	const timeInputLabel = newElement("label", "form-labels", ...Array(1), "Time:");
 	timeInputLabel.setAttribute("for", "task-time-input");
@@ -245,6 +245,9 @@ function displayNewTaskWindow(storageKey = null) {
 		if (dateRadioNo.checked) {
 			dateRadioYes.checked = false;
 			dateInput.disabled = true;
+			timeRadioYes.checked = false;
+			timeRadioNo.checked = true;
+			timeInput.disabled = true;
 		}
 	});
 
@@ -252,6 +255,9 @@ function displayNewTaskWindow(storageKey = null) {
 		if (timeRadioYes.checked) {
 			timeRadioNo.checked = false;
 			timeInput.disabled = false;
+			dateRadioNo.checked = false;
+			dateRadioYes.checked = true;
+			dateInput.disabled = false;
 		}
 	});
 
@@ -279,10 +285,11 @@ function displayNewTaskWindow(storageKey = null) {
 		let taskNotesValue = taskNotesInput.value;
 		let taskDateValue = "";
 		let taskTimeValue = "";
-		if (dateInput) {
+		
+		if (dateInput && dateRadioNo.checked == false) {
 			taskDateValue = dateInput.value;
 		}
-		if (timeInput) {
+		if (timeInput && timeRadioNo.checked == false) {
 			taskTimeValue = timeInput.value;
 		}
 
