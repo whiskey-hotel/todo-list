@@ -5,7 +5,6 @@ import { updateDOMForDeletingTask } from "./taskCountTracking";
 import { newTask } from "./taskHandler";
 import { newProject } from "./elementBuilder";
 
-
 function displayAllProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
 	let projectObj = pageState.getStorage(dataValue);
@@ -27,7 +26,7 @@ function displayAllProjectTasks(e) {
 	}
 }
 
-function displaySelectedProjectTasks(e){
+function displaySelectedProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
@@ -63,24 +62,24 @@ function removeAllTasks(storageKey) {
 	}
 }
 
-function projectValidation(projectNameValue){
-	let errorArray = []
+function projectValidation(projectNameValue) {
+	let errorArray = [];
 	if (projectNameValue.toLowerCase() == "all") {
 		errorArray.push("Cannot use 'All' as a project name");
 	}
 	if (projectNameValue === "" || projectNameValue == null) {
 		errorArray.push("Name is required");
 	}
-	return errorArray
+	return errorArray;
 }
 
-function createProject (e, projectNameInput, storageKey) {
+function createProject(e, projectNameInput, storageKey, newProjectContainer) {
 	const errorField = document.getElementById("project-name-error");
 	const projectsDiv = document.getElementById("projects-div");
 	let projectNameValue = projectNameInput.value;
 
 	let messages = projectValidation(projectNameValue);
-	
+
 	if (messages.length > 0) {
 		e.preventDefault();
 		errorField.textContent = messages.join(", ");
@@ -95,10 +94,8 @@ function createProject (e, projectNameInput, storageKey) {
 			let newElement = newProject(newProjectObject);
 			projectsDiv.appendChild(newElement);
 		}
-
 		closeWindow(newProjectContainer);
 	}
 }
-
 
 export { displayAllProjectTasks, displaySelectedProjectTasks, removeAllTasks, createProject };
