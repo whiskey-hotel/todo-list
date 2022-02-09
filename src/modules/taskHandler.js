@@ -4,6 +4,35 @@ import { pageState } from "./storage";
 import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks } from "./taskCountTracking";
 import { dateFormatter, timeFormatter } from "./dateTime";
 
+function showHideCompletedTasks(showCompleted) {
+	const taskDiv = document.getElementById("main-task-div");
+	showCompleted = !showCompleted;
+	if (showCompleted) {
+		for (let i = 0; i < localStorage.length; i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject["type"] == "task") {
+				if (storageObject["complete"]) {
+					let restoredTask = newTask(storageObject);
+					taskDiv.appendChild(restoredTask);
+				}
+			}
+		}
+	} else {
+		for (let i = 0; i < localStorage.length; i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject["type"] == "task") {
+				if (storageObject["complete"]) {
+					let restoredTask = document.querySelector(`.task-list[data-value=${storageKey}`);
+					taskDiv.removeChild(restoredTask);
+				}
+			}
+		}
+	}
+	return showCompleted
+}
+
 function newTask(obj) {
 	let storageKey = obj.key;
 	let project = obj.projectName;
@@ -353,4 +382,4 @@ function completed(completed, storageKey, obj) {
 	return completed;
 }
 
-export { newTask, dropDownOption, displayNewTaskWindow };
+export { newTask, dropDownOption, displayNewTaskWindow, showHideCompletedTasks };

@@ -4,6 +4,29 @@ import { pageState } from "./storage";
 import { updateDOMForDeletingTask } from "./taskCountTracking";
 import { newTask } from "./taskHandler";
 
+
+function displayAllProjectTasks(e) {
+	let dataValue = e.target.dataset.value;
+	let projectObj = pageState.getStorage(dataValue);
+	if (projectObj) {
+		const parent = document.getElementById("main-task-div");
+		removeAllChildNodes(parent);
+
+		const title = document.getElementById("project-title-for-task-list");
+		title.textContent = projectObj.projectName;
+
+		for (let i = 0; localStorage.key(i); i++) {
+			let storageKey = localStorage.key(i);
+			let storageObject = pageState.getStorage(storageKey);
+			if (storageObject.type == "task") {
+				let restoredTask = newTask(storageObject);
+				parent.appendChild(restoredTask);
+			}
+		}
+	}
+}
+
+
 function newProject(obj) {
 	const name = obj.projectName;
 	const storageKey = obj.key;
@@ -178,4 +201,4 @@ function displayNewProjectWindow(storageKey = null) {
 
 	return newProjectContainer;
 }
-export { newProject, displayNewProjectWindow };
+export { newProject, displayNewProjectWindow, displayAllProjectTasks };
