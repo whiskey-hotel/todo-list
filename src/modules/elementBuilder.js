@@ -1,10 +1,9 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
-import { showHideCompletedTasks, completedTask, createTask } from "./taskHandler";
-import { displayAllProjectTasks, displaySelectedProjectTasks, removeAllTasks, createProject } from "./projectHandler";
+import { showHideCompletedTasks, completedTask, createTask, removeTask  } from "./taskHandler";
+import { displayAllProjectTasks, displaySelectedProjectTasks, createProject, removeProject } from "./projectHandler";
 import { pageState } from "./storage";
-import { projects, tasks } from "./objectFactory";
 import { dateFormatter, timeFormatter } from "./dateTime";
-import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks } from "./taskCountTracking";
+import { updateDOMForTotalCompletedTasks } from "./taskCountTracking";
 
 function home(mainObj) {
 	const projectsContainer = newElement("div", "projects-container");
@@ -132,11 +131,7 @@ function dropDownOptionForProjects(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-		const mainProjectsDiv = document.getElementById("projects-div");
-		const deletedProject = document.body.querySelector(`.project-list[data-value=${storageKey}`);
-		removeAllTasks(storageKey);
-		projects().deleteProject(storageKey);
-		mainProjectsDiv.removeChild(deletedProject);
+		removeProject(storageKey)
 	});
 
 	dropDownDiv.appendChild(updateButton);
@@ -290,13 +285,7 @@ function dropDownOptionForTasks(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-		const mainTaskDiv = document.getElementById("main-task-div");
-		const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
-		let projectKey = pageState.getStorage(storageKey).projectKey;
-		updateDOMForDeletingTask(projectKey);
-		projects().updateNumberOfTasks(projectKey, "decrement");
-		tasks().deleteTask(storageKey);
-		mainTaskDiv.removeChild(deletedTask);
+		removeTask(storageKey)
 	});
 
 	dropDownDiv.appendChild(updateButton);
@@ -477,28 +466,6 @@ function displayNewTaskWindow(storageKey = null) {
 	return newTaskContainer;
 }
 
-function recall(selectedProject = null, completed = null) {
-	const projectsDiv = document.getElementById("projects-div");
-	const taskDiv = document.getElementById("main-task-div");
-	let totalNumberOfTasks = 0;
-	const allProjectCount = document.body.querySelector(`.project-list[data-value=P0]`);
 
-	for (let i = 0; i < localStorage.length; i++) {
-		let storageKey = localStorage.key(i);
-		let storageObject = pageState.getStorage(storageKey);
-		if (storageObject["type"] == "project" && storageKey != "P0") {
-			let restoredProject = newProject(storageObject);
-			projectsDiv.appendChild(restoredProject);
-		} else if (storageObject["type"] == "task") {
-			if (storageObject["complete"] == false) {
-				totalNumberOfTasks += 1;
-				let restoredTask = newTask(storageObject);
-				taskDiv.appendChild(restoredTask);
-			}
-		}
-	}
 
-	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
-}
-
-export { home, recall, newProject, dropDownOptionForProjects, displayNewProjectWindow, newTask };
+export { home, newProject, dropDownOptionForProjects, displayNewProjectWindow, newTask };

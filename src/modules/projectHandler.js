@@ -98,4 +98,12 @@ function createProject(e, projectNameInput, storageKey, newProjectContainer) {
 	}
 }
 
-export { displayAllProjectTasks, displaySelectedProjectTasks, removeAllTasks, createProject };
+function removeProject(storageKey){
+	const mainProjectsDiv = document.getElementById("projects-div");
+	const deletedProject = document.body.querySelector(`.project-list[data-value=${storageKey}`);
+	removeAllTasks(storageKey);
+	projects().deleteProject(storageKey);
+	mainProjectsDiv.removeChild(deletedProject);
+}
+
+export { displayAllProjectTasks, displaySelectedProjectTasks, removeAllTasks, createProject, removeProject };

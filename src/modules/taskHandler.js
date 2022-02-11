@@ -46,7 +46,7 @@ function completedTask(completed, obj) {
 function taskValidation(taskNameValue) {
 	let errorArray = [];
 	if (taskNameValue === "" || taskNameValue == null) {
-		errorArray.push("Name is required");
+		errorArray.push("Task description is required");
 	}
 	return errorArray;
 }
@@ -101,4 +101,14 @@ function createTask(e, storageKey, newTaskContainer, taskNameInput, projectNameS
 	}
 }
 
-export { newTask, showHideCompletedTasks, completedTask, createTask };
+function removeTask(storageKey){
+	const mainTaskDiv = document.getElementById("main-task-div");
+	const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
+	let projectKey = pageState.getStorage(storageKey).projectKey;
+	updateDOMForDeletingTask(projectKey);
+	projects().updateNumberOfTasks(projectKey, "decrement");
+	tasks().deleteTask(storageKey);
+	mainTaskDiv.removeChild(deletedTask);
+}
+
+export { newTask, showHideCompletedTasks, completedTask, createTask, removeTask };
