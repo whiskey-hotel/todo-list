@@ -7,6 +7,8 @@ import { newProject } from "./elementBuilder";
 
 function displayAllProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
+	projects().changeCurrentProject(dataValue);
+	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
 		const parent = document.getElementById("main-task-div");
@@ -18,7 +20,11 @@ function displayAllProjectTasks(e) {
 		for (let i = 0; localStorage.key(i); i++) {
 			let storageKey = localStorage.key(i);
 			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject.type == "task") {
+			if (storageObject.type == "task" && !storageObject.complete) {
+				let restoredTask = newTask(storageObject);
+				parent.appendChild(restoredTask);
+			}
+			if (storageObject.type == "task" && storageObject.complete && completedStatus) {
 				let restoredTask = newTask(storageObject);
 				parent.appendChild(restoredTask);
 			}
@@ -28,6 +34,8 @@ function displayAllProjectTasks(e) {
 
 function displaySelectedProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
+	projects().changeCurrentProject(dataValue);
+	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
 		const parent = document.getElementById("main-task-div");
@@ -38,7 +46,11 @@ function displaySelectedProjectTasks(e) {
 		for (let i = 0; localStorage.key(i); i++) {
 			let storageKey = localStorage.key(i);
 			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject.type == "task" && storageObject.projectKey == projectObj.key) {
+			if (storageObject.type == "task" && storageObject.projectKey == projectObj.key && !storageObject.complete) {
+				let restoredTask = newTask(storageObject);
+				parent.appendChild(restoredTask);
+			}
+			if (storageObject.type == "task" && storageObject.projectKey == projectObj.key && storageObject.complete && completedStatus) {
 				let restoredTask = newTask(storageObject);
 				parent.appendChild(restoredTask);
 			}
@@ -98,7 +110,7 @@ function createProject(e, projectNameInput, storageKey, newProjectContainer) {
 	}
 }
 
-function removeProject(storageKey){
+function removeProject(storageKey) {
 	const mainProjectsDiv = document.getElementById("projects-div");
 	const deletedProject = document.body.querySelector(`.project-list[data-value=${storageKey}`);
 	removeAllTasks(storageKey);

@@ -5,33 +5,36 @@ import { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask
 import { dateFormatter, timeFormatter } from "./dateTime";
 import { newTask } from "./elementBuilder";
 
-function showHideCompletedTasks(showCompleted) {
+function showHideCompletedTasks() {
+	let showCompleted = projects().getCompletedStatus();
 	const taskDiv = document.getElementById("main-task-div");
 	showCompleted = !showCompleted;
 	if (showCompleted) {
 		for (let i = 0; i < localStorage.length; i++) {
 			let storageKey = localStorage.key(i);
 			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject["type"] == "task") {
-				if (storageObject["complete"]) {
+			if (storageObject["type"] == "task" && storageObject["complete"]) {
+				if (projects().getCurrentProject() == "P0") {
+					let restoredTask = newTask(storageObject);
+					taskDiv.appendChild(restoredTask);
+				} else if (storageObject["projectKey"] == projects().getCurrentProject()) {
 					let restoredTask = newTask(storageObject);
 					taskDiv.appendChild(restoredTask);
 				}
 			}
 		}
 	} else {
-		for (let i = 0; i < localStorage.length; i++) {
-			let storageKey = localStorage.key(i);
+		let completedTask = document.getElementsByClassName("task-list");
+		Array.from(completedTask).forEach((c) => {
+			let storageKey = c.dataset.value;
 			let storageObject = pageState.getStorage(storageKey);
-			if (storageObject["type"] == "task") {
-				if (storageObject["complete"]) {
-					let restoredTask = document.querySelector(`.task-list[data-value=${storageKey}`);
-					taskDiv.removeChild(restoredTask);
-				}
+			if (storageObject["complete"]) {
+				taskDiv.removeChild(c);
 			}
-		}
+		});
 	}
-	return showCompleted;
+	projects().updateShowCompleted(showCompleted);
+	return;
 }
 
 function completedTask(completed, obj) {
@@ -101,7 +104,7 @@ function createTask(e, storageKey, newTaskContainer, taskNameInput, projectNameS
 	}
 }
 
-function removeTask(storageKey){
+function removeTask(storageKey) {
 	const mainTaskDiv = document.getElementById("main-task-div");
 	const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
 	let projectKey = pageState.getStorage(storageKey).projectKey;

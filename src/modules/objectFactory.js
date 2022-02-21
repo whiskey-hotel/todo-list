@@ -2,9 +2,24 @@ import { pageState } from "./storage";
 
 const projects = (name) => {
 	const type = "project";
+
+	const changeCurrentProject = function (newCurrentProject) {
+		pageState.populateStorage("currentProject", newCurrentProject);
+	};
+
+	const updateShowCompleted = function (value) {
+		pageState.populateStorage("showCompleted", value);
+	};
+
+	const getCurrentProject = () => {
+		return pageState.getStorage("currentProject");
+	};
+
+	const getCompletedStatus = () => {
+		return pageState.getStorage("showCompleted");
+	};
+
 	const getName = () => name;
-	let totalNumberOfTasks = 0;
-	let numberOfTasks = 0;
 
 	const create = function () {
 		let projectObject;
@@ -71,7 +86,6 @@ const projects = (name) => {
 			++storageObject.numberOfTasks;
 		}
 		store(key, storageObject);
-		// totalNumberOfTasks += 1;
 	};
 
 	const keyGenerator = function (letter) {
@@ -90,22 +104,22 @@ const projects = (name) => {
 		pageState.populateStorage(key, obj);
 	};
 
-	return { getName, create, update, deleteProject, updateNumberOfTasks, store, keyGenerator };
+	return {
+		getName,
+		create,
+		update,
+		deleteProject,
+		updateNumberOfTasks,
+		store,
+		keyGenerator,
+		updateShowCompleted,
+		changeCurrentProject,
+		getCurrentProject,
+		getCompletedStatus,
+	};
 };
 
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
+/**/
 
 const tasks = (task, project, projectKey = "P0", notes, day, time) => {
 	const { store, keyGenerator } = projects(project);

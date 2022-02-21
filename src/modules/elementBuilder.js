@@ -62,9 +62,9 @@ function home(mainObj) {
 		displayAllProjectTasks(e);
 	});
 
-	let showCompleted = false;
+	
 	completedDiv.addEventListener("click", function () {
-		showCompleted = showHideCompletedTasks(showCompleted);
+		 showHideCompletedTasks();
 	});
 
 	return { projectsContainer, taskContainer };
