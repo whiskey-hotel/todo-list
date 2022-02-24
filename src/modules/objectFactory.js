@@ -33,6 +33,8 @@ const projects = (name) => {
 					type: type,
 					projectName: name,
 					numberOfTasks: 0,
+					completeTasks: 0,
+					incompleteTasks: 0,
 				}
 			);
 		} else {
@@ -44,6 +46,8 @@ const projects = (name) => {
 					type: type,
 					projectName: name,
 					numberOfTasks: 0,
+					completeTasks: 0,
+					incompleteTasks: 0,
 				}
 			);
 		}
@@ -81,9 +85,15 @@ const projects = (name) => {
 	const updateNumberOfTasks = function (key, dec = null) {
 		let storageObject = pageState.getStorage(key);
 		if (dec) {
+			//marking a task as complete
 			--storageObject.numberOfTasks;
+			--storageObject.completeTasks;
+			++storageObject.incompleteTasks;
 		} else {
+			//marking a task as incomplete
 			++storageObject.numberOfTasks;
+			++storageObject.completeTasks;
+			--storageObject.incompleteTasks;
 		}
 		store(key, storageObject);
 	};

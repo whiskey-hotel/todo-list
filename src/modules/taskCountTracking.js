@@ -27,9 +27,30 @@ function updateDOMForDeletingTask(key) {
 	}
 }
 
-function updateDOMForTotalCompletedTasks() {
+function updateDOMForTotalCompletedTasks(dec = null) {
 	const allTaskCounter = document.getElementById("completed-task-count");
-	++allTaskCounter.textContent;
+	if (dec) {
+		--allTaskCounter.textContent;
+	} else {
+		++allTaskCounter.textContent;
+	}
 }
 
-export { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks };
+function updateDOMForCompletedTask(key, inc = null) {
+	let allTaskCounter = document.getElementById(`P0-task-count`);
+	let projectTaskCounter = document.getElementById(`${key}-task-count`);
+	if (inc) {
+		if (key != "P0") {
+			++projectTaskCounter.textContent;
+		}
+		++allTaskCounter.textContent;
+		
+	} else {
+		if (key != "P0") {
+			--projectTaskCounter.textContent;
+		}
+		--allTaskCounter.textContent;
+	}
+}
+
+export { updateDOMForExistingTask, updateDOMForNewTask, updateDOMForDeletingTask, updateDOMForTotalCompletedTasks, updateDOMForCompletedTask };

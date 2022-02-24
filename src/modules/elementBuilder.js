@@ -3,7 +3,7 @@ import { showHideCompletedTasks, completedTask, createTask, removeTask  } from "
 import { displayAllProjectTasks, displaySelectedProjectTasks, createProject, removeProject } from "./projectHandler";
 import { pageState } from "./storage";
 import { dateFormatter, timeFormatter } from "./dateTime";
-import { updateDOMForTotalCompletedTasks } from "./taskCountTracking";
+import { updateDOMForTotalCompletedTasks, updateDOMForCompletedTask } from "./taskCountTracking";
 
 function home(mainObj) {
 	const projectsContainer = newElement("div", "projects-container");
@@ -185,6 +185,7 @@ function displayNewProjectWindow(storageKey = null) {
 
 function newTask(obj) {
 	let storageKey = obj.key;
+	let projectKey = obj.projectKey;
 	let task = obj.taskName;
 	let notes = obj.notes;
 	let day = obj.day;
@@ -215,6 +216,7 @@ function newTask(obj) {
 
 	newTaskCheckMark.addEventListener("click", function () {
 		complete = completedTask(complete, obj);
+		//update DOM here
 		const taskDiv = document.getElementById("main-task-div");
 		const taskChild = document.querySelector(`.task-list[data-value=${storageKey}`);
 		const timer1 = () => {
@@ -226,8 +228,11 @@ function newTask(obj) {
 		if (complete) {
 			newTaskCheckMark.checked;
 			updateDOMForTotalCompletedTasks();
+			updateDOMForCompletedTask(projectKey)
 			timer1();
 		} else {
+			updateDOMForTotalCompletedTasks("dec");
+			updateDOMForCompletedTask(projectKey,"inc")
 			newTaskCheckMark.checked = false;
 			clearTimeout(timer1);
 		}

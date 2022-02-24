@@ -1,5 +1,6 @@
 import "./main.css";
 import { home, newProject, newTask } from "./modules/elementBuilder";
+import { updateDOMForTotalCompletedTasks } from "./modules/taskCountTracking";
 import * as pageRender from "./modules/DOMController";
 import { pageState } from "./modules/storage";
 import { projects } from "./modules/objectFactory";
@@ -26,6 +27,9 @@ function recall(selectedProject = null, completed = null) {
 			let restoredProject = newProject(storageObject);
 			projectsDiv.appendChild(restoredProject);
 		} else if (storageObject["type"] == "task") {
+			if (storageObject["complete"]) {
+				updateDOMForTotalCompletedTasks();
+			}
 			if (storageObject["complete"] == false) {
 				totalNumberOfTasks += 1;
 				let restoredTask = newTask(storageObject);

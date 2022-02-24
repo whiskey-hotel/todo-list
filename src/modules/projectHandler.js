@@ -1,3 +1,5 @@
+"use strict";
+
 import { closeWindow, removeAllChildNodes } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
@@ -7,7 +9,9 @@ import { newProject } from "./elementBuilder";
 
 function displayAllProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
-	projects().changeCurrentProject(dataValue);
+	if (dataValue) {
+		projects().changeCurrentProject(dataValue);
+	}
 	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
@@ -34,7 +38,9 @@ function displayAllProjectTasks(e) {
 
 function displaySelectedProjectTasks(e) {
 	let dataValue = e.target.dataset.value;
-	projects().changeCurrentProject(dataValue);
+	if (dataValue) {
+		projects().changeCurrentProject(dataValue);
+	}
 	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
@@ -61,16 +67,18 @@ function displaySelectedProjectTasks(e) {
 function removeAllTasks(storageKey) {
 	const mainTaskDiv = document.getElementById("main-task-div");
 
-	let projectName = pageState.getStorage(storageKey)["projectName"];
 	for (let i = 0; i < localStorage.length; i++) {
 		let taskKey = localStorage.key(i);
 		let taskObject = pageState.getStorage(taskKey);
-		if (taskObject["type"] == "task" && taskObject["projectName"] == projectName) {
+		if (taskObject.type == "task" && taskObject.projectKey == storageKey) {
 			let deletedTask = document.body.querySelector(`.task-list[data-value=${taskKey}`);
-			mainTaskDiv.removeChild(deletedTask);
+			if (deletedTask) {
+				mainTaskDiv.removeChild(deletedTask);
+			}
 			updateDOMForDeletingTask(taskObject.projectKey);
 			tasks().deleteTask(taskKey);
 		}
+		console.log(i);
 	}
 }
 
