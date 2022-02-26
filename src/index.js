@@ -1,6 +1,6 @@
 import "./main.css";
 import { home, newProject, newTask } from "./modules/elementBuilder";
-import { updateDOMForTotalCompletedTasks } from "./modules/taskCountTracking";
+import { updateDOMForTotalCompletedTasks, updateDOMForNewTask } from "./modules/taskCountTracking";
 import * as pageRender from "./modules/DOMController";
 import { pageState } from "./modules/storage";
 import { projects } from "./modules/objectFactory";
@@ -17,8 +17,9 @@ function recall(selectedProject = null, completed = null) {
 	projects().changeCurrentProject("P0");
 	const projectsDiv = document.getElementById("projects-div");
 	const taskDiv = document.getElementById("main-task-div");
-	let totalNumberOfTasks = 0;
-	const allProjectCount = document.body.querySelector(`.project-list[data-value=P0]`);
+	// let totalNumberOfTasks = 0;
+	let allProjectObject = pageState.getStorage("P0");
+	// const allProjectCount = document.body.querySelector(`.project-list[data-value=P0]`);
 
 	for (let i = 0; i < localStorage.length; i++) {
 		let storageKey = localStorage.key(i);
@@ -26,19 +27,30 @@ function recall(selectedProject = null, completed = null) {
 		if (storageObject["type"] == "project" && storageKey != "P0") {
 			let restoredProject = newProject(storageObject);
 			projectsDiv.appendChild(restoredProject);
-		} else if (storageObject["type"] == "task") {
-			if (storageObject["complete"]) {
-				updateDOMForTotalCompletedTasks();
-			}
-			if (storageObject["complete"] == false) {
-				totalNumberOfTasks += 1;
-				let restoredTask = newTask(storageObject);
-				taskDiv.appendChild(restoredTask);
-			}
 		}
 	}
 
-	allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
+	for (let i = 0; i < localStorage.length; i++) {
+		let storageKey = localStorage.key(i);
+		let storageObject = pageState.getStorage(storageKey);
+		if (storageObject["type"] == "task") {
+			if (storageObject["complete"]) {
+				++allProjectObject.completeTasks;
+				++allProjectObject.numberOfTasks;
+				projects().store(allProjectObject.key, allProjectObject);
+			}
+			if (!storageObject["complete"]) {
+				projects().updateNumberOfTasks(allProjectObject.key, null, "newTask");
+				// totalNumberOfTasks += 1;
+				let restoredTask = newTask(storageObject);
+				taskDiv.appendChild(restoredTask);
+				updateDOMForNewTask(storageObject.projectKey);
+			}
+			updateDOMForTotalCompletedTasks();
+		}
+	}
+
+	// allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
 }
 
 recall();

@@ -85,18 +85,24 @@ function createTask(e, storageKey, newTaskContainer, taskNameInput, projectNameS
 			const updateTaskDiv = document.querySelector(`.task-list[data-value=${storageKey}]`).childNodes[1];
 			updateTaskDiv.childNodes[0].textContent = taskNameValue;
 			updateTaskDiv.childNodes[1].childNodes[0].textContent = taskNotesValue;
-			updateTaskDiv.childNodes[2].childNodes[0].textContent = dateFormatter(taskDateValue);
-			updateTaskDiv.childNodes[2].childNodes[1].textContent = timeFormatter(taskTimeValue);
+			if (taskDateValue) {
+				updateTaskDiv.childNodes[2].childNodes[0].textContent = dateFormatter(taskDateValue);
+			}
+			if (taskTimeValue) {
+				updateTaskDiv.childNodes[2].childNodes[1].textContent = timeFormatter(taskTimeValue);
+			}
 			let oldKey = pageState.getStorage(storageKey).projectKey;
+			let completedStatus = pageState.getStorage(storageKey).complete;
 			let newKey = taskProjectKey;
+			projects().updateProjectTaskCountForExistingTask(oldKey, newKey, completedStatus);
+			// projects().updateNumberOfTasks(newKey);
+			// projects().updateNumberOfTasks(oldKey, "decrement");
 			updateDOMForExistingTask(newKey, oldKey);
-			projects().updateNumberOfTasks(newKey);
-			projects().updateNumberOfTasks(oldKey, "decrement");
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskProjectKey, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
 			let newTaskObject = instantiateTaskObject.create();
 			let newElement = newTask(newTaskObject);
-			projects().updateNumberOfTasks(newTaskObject.projectKey);
+			projects().updateNumberOfTasks(newTaskObject.projectKey, null, "newTask");
 			updateDOMForNewTask(newTaskObject.projectKey);
 			taskDiv.appendChild(newElement);
 		}
@@ -108,9 +114,9 @@ function removeTask(storageKey) {
 	const mainTaskDiv = document.getElementById("main-task-div");
 	const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
 	let projectKey = pageState.getStorage(storageKey).projectKey;
-	updateDOMForDeletingTask(projectKey);
 	projects().updateNumberOfTasks(projectKey, "decrement");
 	tasks().deleteTask(storageKey);
+	updateDOMForDeletingTask(projectKey);
 	mainTaskDiv.removeChild(deletedTask);
 }
 

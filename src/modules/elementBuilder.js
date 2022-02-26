@@ -4,6 +4,7 @@ import { displayAllProjectTasks, displaySelectedProjectTasks, createProject, rem
 import { pageState } from "./storage";
 import { dateFormatter, timeFormatter } from "./dateTime";
 import { updateDOMForTotalCompletedTasks, updateDOMForCompletedTask } from "./taskCountTracking";
+import { projects } from "./objectFactory";
 
 function home(mainObj) {
 	const projectsContainer = newElement("div", "projects-container");
@@ -13,7 +14,7 @@ function home(mainObj) {
 	const mainList = newElement("div", "project-list", "all-list");
 	mainList.setAttribute("data-value", "P0");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
-	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, mainObj.numberOfTasks);
+	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, `${mainObj.incompleteTasks}`);
 	const taskContainer = newElement("div", "task-container");
 	const taskDiv = newElement("div", ...Array(1), "task-div");
 	const taskHeader = newElement("div", "header");
@@ -73,7 +74,7 @@ function home(mainObj) {
 function newProject(obj) {
 	const name = obj.projectName;
 	const storageKey = obj.key;
-	const numberOfTasks = obj.numberOfTasks;
+	const numberOfTasks = obj.incompleteTasks;
 
 	const modifiedNameForID = name.replace(/\s/g, "");
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
@@ -227,13 +228,15 @@ function newTask(obj) {
 
 		if (complete) {
 			newTaskCheckMark.checked;
+			projects().updateNumberOfTasks(projectKey, "dec");
 			updateDOMForTotalCompletedTasks();
 			updateDOMForCompletedTask(projectKey)
 			timer1();
 		} else {
+			newTaskCheckMark.checked = false;
+			projects().updateNumberOfTasks(projectKey);
 			updateDOMForTotalCompletedTasks("dec");
 			updateDOMForCompletedTask(projectKey,"inc")
-			newTaskCheckMark.checked = false;
 			clearTimeout(timer1);
 		}
 	});

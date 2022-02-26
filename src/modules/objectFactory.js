@@ -1,3 +1,4 @@
+import { newTask } from "./elementBuilder";
 import { pageState } from "./storage";
 
 const projects = (name) => {
@@ -29,7 +30,7 @@ const projects = (name) => {
 			projectObject = Object.assign(
 				{},
 				{
-					key: "P0",
+					key: storageKey,
 					type: type,
 					projectName: name,
 					numberOfTasks: 0,
@@ -82,20 +83,58 @@ const projects = (name) => {
 		pageState.deleteStorage(key);
 	};
 
-	const updateNumberOfTasks = function (key, dec = null) {
+	const updateNumberOfTasks = function (key, dec = null, newTask = null) {
 		let storageObject = pageState.getStorage(key);
-		if (dec) {
-			//marking a task as complete
-			--storageObject.numberOfTasks;
-			--storageObject.completeTasks;
+		let allProjectObject = pageState.getStorage("P0");
+		if (newTask) {
+			if (key != "P0") {
+				++allProjectObject.incompleteTasks;
+				++allProjectObject.numberOfTasks;
+				store("P0", allProjectObject);
+			}
 			++storageObject.incompleteTasks;
+			++storageObject.numberOfTasks;
+		} else if (dec) {
+			//marking a task as complete
+			if (key != "P0") {
+				--allProjectObject.incompleteTasks;
+				++allProjectObject.completeTasks;
+				store("P0", allProjectObject);
+			}
+			--storageObject.incompleteTasks;
+			++storageObject.completeTasks;
 		} else {
 			//marking a task as incomplete
-			++storageObject.numberOfTasks;
-			++storageObject.completeTasks;
-			--storageObject.incompleteTasks;
+			if (key != "P0") {
+				++allProjectObject.incompleteTasks;
+				--allProjectObject.completeTasks;
+				store("P0", allProjectObject);
+			}
+			++storageObject.incompleteTasks;
+			--storageObject.completeTasks;
 		}
 		store(key, storageObject);
+	};
+
+	const updateProjectTaskCountForExistingTask = function (oldKey, newKey, complete) {
+		let oldTaskObject = pageState.getStorage(oldKey);
+		let newTaskObject = pageState.getStorage(newKey);
+		newTaskObject = newKey == "P0" ? undefined : newTaskObject;
+		oldTaskObject = oldKey == "P0" ? undefined : oldTaskObject;
+
+		if (!complete) {
+			oldTaskObject && --oldTaskObject.incompleteTasks;
+			oldTaskObject && --oldTaskObject.numberOfTasks;
+			newTaskObject && ++newTaskObject.incompleteTasks;
+			newTaskObject && ++newTaskObject.numberOfTasks;
+		} else {
+			oldTaskObject && --oldTaskObject.completeTasks;
+			oldTaskObject && --oldTaskObject.numberOfTasks;
+			newTaskObject && ++newTaskObject.completeTasks;
+			newTaskObject && ++newTaskObject.numberOfTasks;
+		}
+		newTaskObject && store(newKey, newTaskObject);
+		oldTaskObject && store(oldKey, oldTaskObject);
 	};
 
 	const keyGenerator = function (letter) {
@@ -126,6 +165,7 @@ const projects = (name) => {
 		changeCurrentProject,
 		getCurrentProject,
 		getCompletedStatus,
+		updateProjectTaskCountForExistingTask,
 	};
 };
 
