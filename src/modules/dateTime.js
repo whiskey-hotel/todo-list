@@ -14,8 +14,7 @@ function timeFormatter(time) {
 }
 
 function timeCheck(date, time) {
-	let taskTime;
-	taskTime = time ? date + "T" + time : date;
+	let taskTime = time ? date + "T" + time : date;
 	let currentTime = format(new Date(), "yyyy-MM-dd'T'HH:mm");
 	return isAfter(parseISO(currentTime), parseISO(taskTime));
 }
