@@ -1,8 +1,8 @@
 import { newElement, sendToBody, closeWindow } from "./DOMController";
-import { showHideCompletedTasks, completedTask, createTask, removeTask  } from "./taskHandler";
+import { showHideCompletedTasks, completedTask, createTask, removeTask } from "./taskHandler";
 import { displayAllProjectTasks, displaySelectedProjectTasks, createProject, removeProject } from "./projectHandler";
 import { pageState } from "./storage";
-import { dateFormatter, timeFormatter } from "./dateTime";
+import { dateFormatter, timeFormatter, timeCheck } from "./dateTime";
 import { updateDOMForTotalCompletedTasks, updateDOMForCompletedTask } from "./taskCountTracking";
 import { projects } from "./objectFactory";
 
@@ -63,9 +63,8 @@ function home(mainObj) {
 		displayAllProjectTasks(e);
 	});
 
-	
 	completedDiv.addEventListener("click", function () {
-		 showHideCompletedTasks();
+		showHideCompletedTasks();
 	});
 
 	return { projectsContainer, taskContainer };
@@ -132,7 +131,7 @@ function dropDownOptionForProjects(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-		removeProject(storageKey)
+		removeProject(storageKey);
 	});
 
 	dropDownDiv.appendChild(updateButton);
@@ -192,6 +191,11 @@ function newTask(obj) {
 	let day = obj.day;
 	let time = obj.time;
 	let complete = obj.complete;
+	let isTaskExpired;
+
+	if (day || time) {
+		isTaskExpired = timeCheck(day, time);
+	}
 
 	if (day) {
 		day = dateFormatter(day);
@@ -214,10 +218,13 @@ function newTask(obj) {
 	const newDateTimeDiv = newElement("div", "task-date-time-div");
 	const newTaskDay = newElement("p", "task-date", ...Array(1), day);
 	const newTasktime = newElement("p", "task-time", ...Array(1), time);
+	if (isTaskExpired) {
+		newTaskDay.style.color = "red";
+		newTasktime.style.color = "red";
+	}
 
 	newTaskCheckMark.addEventListener("click", function () {
 		complete = completedTask(complete, obj);
-		//update DOM here
 		const taskDiv = document.getElementById("main-task-div");
 		const taskChild = document.querySelector(`.task-list[data-value=${storageKey}`);
 		const timer1 = () => {
@@ -230,13 +237,13 @@ function newTask(obj) {
 			newTaskCheckMark.checked;
 			projects().updateNumberOfTasks(projectKey, "dec");
 			updateDOMForTotalCompletedTasks();
-			updateDOMForCompletedTask(projectKey)
-			timer1();
+			updateDOMForCompletedTask(projectKey);
+			!projects().getCompletedStatus() ? timer1() : null;
 		} else {
 			newTaskCheckMark.checked = false;
 			projects().updateNumberOfTasks(projectKey);
 			updateDOMForTotalCompletedTasks("dec");
-			updateDOMForCompletedTask(projectKey,"inc")
+			updateDOMForCompletedTask(projectKey, "inc");
 			clearTimeout(timer1);
 		}
 	});
@@ -293,7 +300,7 @@ function dropDownOptionForTasks(storageKey) {
 	});
 
 	deleteButton.addEventListener("click", function () {
-		removeTask(storageKey)
+		removeTask(storageKey);
 	});
 
 	dropDownDiv.appendChild(updateButton);
@@ -473,7 +480,5 @@ function displayNewTaskWindow(storageKey = null) {
 
 	return newTaskContainer;
 }
-
-
 
 export { home, newProject, dropDownOptionForProjects, displayNewProjectWindow, newTask };

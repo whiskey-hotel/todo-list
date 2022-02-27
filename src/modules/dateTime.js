@@ -1,5 +1,4 @@
-import { interval } from "date-fns";
-import { format, parse } from "date-fns";
+import { format, parse, isAfter, parseISO, isDate } from "date-fns";
 
 function dateFormatter(day) {
 	let reFormatDateArray = day.split("-");
@@ -14,4 +13,11 @@ function timeFormatter(time) {
 	return format(parse(time, "HH:mm", new Date()), "h:mm a");
 }
 
-export { dateFormatter, timeFormatter };
+function timeCheck(date, time) {
+	let taskTime;
+	taskTime = time ? date + "T" + time : date;
+	let currentTime = format(new Date(), "yyyy-MM-dd'T'HH:mm");
+	return isAfter(parseISO(currentTime), parseISO(taskTime));
+}
+
+export { dateFormatter, timeFormatter, timeCheck };

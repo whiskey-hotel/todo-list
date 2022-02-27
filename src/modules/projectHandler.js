@@ -3,7 +3,7 @@
 import { closeWindow, removeAllChildNodes } from "./DOMController";
 import { projects, tasks } from "./objectFactory";
 import { pageState } from "./storage";
-import { updateDOMForDeletingTask } from "./taskCountTracking";
+import { updateDOMForDeletingTask, updateDOMForTotalCompletedTasks } from "./taskCountTracking";
 import { newTask } from "./taskHandler";
 import { newProject } from "./elementBuilder";
 
@@ -15,6 +15,7 @@ function displayAllProjectTasks(e) {
 	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
+		updateDOMForTotalCompletedTasks();
 		const parent = document.getElementById("main-task-div");
 		removeAllChildNodes(parent);
 
@@ -44,6 +45,7 @@ function displaySelectedProjectTasks(e) {
 	let completedStatus = projects().getCompletedStatus();
 	let projectObj = pageState.getStorage(dataValue);
 	if (projectObj) {
+		updateDOMForTotalCompletedTasks();
 		const parent = document.getElementById("main-task-div");
 		removeAllChildNodes(parent);
 		const title = document.getElementById("project-title-for-task-list");
@@ -78,7 +80,6 @@ function removeAllTasks(storageKey) {
 			updateDOMForDeletingTask(taskObject.projectKey);
 			tasks().deleteTask(taskKey);
 		}
-		console.log(i);
 	}
 }
 

@@ -95,8 +95,6 @@ function createTask(e, storageKey, newTaskContainer, taskNameInput, projectNameS
 			let completedStatus = pageState.getStorage(storageKey).complete;
 			let newKey = taskProjectKey;
 			projects().updateProjectTaskCountForExistingTask(oldKey, newKey, completedStatus);
-			// projects().updateNumberOfTasks(newKey);
-			// projects().updateNumberOfTasks(oldKey, "decrement");
 			updateDOMForExistingTask(newKey, oldKey);
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskProjectKey, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {

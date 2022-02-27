@@ -12,14 +12,12 @@ let mainListObj = instantiateMainProject.create();
 pageRender.moduleRender(home(mainListObj), main);
 pageRender.sendToBody(main);
 
-function recall(selectedProject = null, completed = null) {
+function recall() {
 	projects().updateShowCompleted(false);
 	projects().changeCurrentProject("P0");
 	const projectsDiv = document.getElementById("projects-div");
 	const taskDiv = document.getElementById("main-task-div");
-	// let totalNumberOfTasks = 0;
 	let allProjectObject = pageState.getStorage("P0");
-	// const allProjectCount = document.body.querySelector(`.project-list[data-value=P0]`);
 
 	for (let i = 0; i < localStorage.length; i++) {
 		let storageKey = localStorage.key(i);
@@ -41,7 +39,6 @@ function recall(selectedProject = null, completed = null) {
 			}
 			if (!storageObject["complete"]) {
 				projects().updateNumberOfTasks(allProjectObject.key, null, "newTask");
-				// totalNumberOfTasks += 1;
 				let restoredTask = newTask(storageObject);
 				taskDiv.appendChild(restoredTask);
 				updateDOMForNewTask(storageObject.projectKey);
@@ -49,8 +46,6 @@ function recall(selectedProject = null, completed = null) {
 			updateDOMForTotalCompletedTasks();
 		}
 	}
-
-	// allProjectCount.childNodes[1].textContent = totalNumberOfTasks;
 }
 
 recall();
