@@ -13,6 +13,7 @@ function home(mainObj) {
 	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
 	const mainList = newElement("div", "project-list", "all-list");
 	mainList.setAttribute("data-value", "P0");
+	const projectInfoDiv = newElement("div", "project-info-div");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, `${mainObj.incompleteTasks}`);
 	const taskContainer = newElement("div", "task-container");
@@ -34,8 +35,9 @@ function home(mainObj) {
 	projectsContainer.appendChild(projectsDiv);
 	projectHeader.appendChild(projectTitle);
 	projectsDiv.appendChild(mainList);
-	mainList.appendChild(listTitle);
-	mainList.appendChild(numberOfTasks);
+	mainList.appendChild(projectInfoDiv)
+	projectInfoDiv.appendChild(listTitle);
+	projectInfoDiv.appendChild(numberOfTasks);
 	projectsContainer.appendChild(addProjectDiv);
 	addProjectDiv.appendChild(addProjectIcon);
 	addProjectDiv.appendChild(addProject);
@@ -78,6 +80,7 @@ function newProject(obj) {
 	const modifiedNameForID = name.replace(/\s/g, "");
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
 	newProject.setAttribute("data-value", storageKey);
+	const projectInfoDiv = newElement("div", "project-info-div");
 	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
 	const numberOfTasksElement = newElement("span", "number-of-tasks", `${storageKey}-task-count`, `${numberOfTasks}`);
 
@@ -100,17 +103,18 @@ function newProject(obj) {
 		displaySelectedProjectTasks(e);
 	});
 
-	newProject.appendChild(newListTitle);
-	newProject.appendChild(numberOfTasksElement);
+	newProject.appendChild(projectInfoDiv);
+	projectInfoDiv.appendChild(newListTitle);
+	projectInfoDiv.appendChild(numberOfTasksElement);
 	newProject.appendChild(moreInfoIcon);
 
 	return newProject;
 }
 
 function dropDownOptionForProjects(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
-	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Rename");
-	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement("div", "drop-down-project-content", `drop-down-${storageKey}`);
+	const updateButton = newElement("span", "drop-down-project-option", `task${storageKey}-update-button`, "Rename");
+	const deleteButton = newElement("span", "drop-down-project-option", `task${storageKey}-delete-button`, "Delete");
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -120,12 +124,13 @@ function dropDownOptionForProjects(storageKey) {
 	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
         key associated with the clicked element. error occurs in the console at every execution */
 	document.addEventListener("click", function (e) {
-		if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
-			newProject.removeChild(document.getElementById("drop-down"));
+		if (document.getElementById(`drop-down-${storageKey}`) && !document.getElementById(`drop-down-${storageKey}`).contains(e.target) && e.target != more) {
+			newProject.removeChild(document.getElementById(`drop-down-${storageKey}`));
 		}
 	});
 
 	updateButton.addEventListener("click", function () {
+		//need to rename associated task projectname
 		sendToBody(displayNewProjectWindow(storageKey));
 		newProject.removeChild(dropDownDiv);
 	});
@@ -277,9 +282,9 @@ function newTask(obj) {
 }
 
 function dropDownOptionForTasks(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
-	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Edit");
-	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement("div", "drop-down-task-content", `drop-down-${storageKey}`);
+	const updateButton = newElement("span", "drop-down-task-option", `task${storageKey}-update-button`, "Edit");
+	const deleteButton = newElement("span", "drop-down-task-option", `task${storageKey}-delete-button`, "Delete");
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -289,8 +294,8 @@ function dropDownOptionForTasks(storageKey) {
 	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
         key associated with the clicked element. error occurs in the console at every execution */
 	document.addEventListener("click", function (e) {
-		if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
-			newTask.removeChild(document.getElementById("drop-down"));
+		if (document.getElementById(`drop-down-${storageKey}`) && !document.getElementById(`drop-down-${storageKey}`).contains(e.target) && e.target != more) {
+			newTask.removeChild(document.getElementById(`drop-down-${storageKey}`));
 		}
 	});
 
