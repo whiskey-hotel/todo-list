@@ -86,6 +86,7 @@ const projects = (name) => {
 	const updateNumberOfTasks = function (key, dec = null, newTask = null) {
 		let storageObject = pageState.getStorage(key);
 		let allProjectObject = pageState.getStorage("P0");
+		//creating a new task
 		if (newTask) {
 			if (key != "P0") {
 				++allProjectObject.incompleteTasks;
@@ -117,6 +118,7 @@ const projects = (name) => {
 	};
 
 	const updateProjectTaskCountForExistingTask = function (oldKey, newKey, complete) {
+		//call if a task is changing its asocciated project
 		let oldTaskObject = pageState.getStorage(oldKey);
 		let newTaskObject = pageState.getStorage(newKey);
 		newTaskObject = newKey == "P0" ? undefined : newTaskObject;
@@ -135,6 +137,32 @@ const projects = (name) => {
 		}
 		newTaskObject && store(newKey, newTaskObject);
 		oldTaskObject && store(oldKey, oldTaskObject);
+	};
+
+	const updateProjectTaskCountForRemovedTask = function (key) {
+		let taskObject = pageState.getStorage(key);
+		let projectObject = pageState.getStorage(taskObject.projectKey);
+		let allProjectObject = pageState.getStorage("P0");
+		if (taskObject.complete) {
+			if (projectObject.key != "P0") {
+				--allProjectObject.completeTasks;
+				--allProjectObject.numberOfTasks;
+				store("P0", allProjectObject);
+			}
+			--projectObject.completeTasks;
+			--projectObject.numberOfTasks;
+			store(projectObject.key, projectObject);
+		} else {
+			if (projectObject.key != "P0") {
+				--allProjectObject.incompleteTasks;
+				--allProjectObject.numberOfTasks;
+				store("P0", allProjectObject);
+			}
+			--projectObject.incompleteTasks;
+			--projectObject.numberOfTasks;
+			store(projectObject.key, projectObject);
+		}
+		
 	};
 
 	const keyGenerator = function (letter) {
@@ -166,6 +194,7 @@ const projects = (name) => {
 		getCurrentProject,
 		getCompletedStatus,
 		updateProjectTaskCountForExistingTask,
+		updateProjectTaskCountForRemovedTask,
 	};
 };
 
@@ -207,7 +236,7 @@ const tasks = (task, project, projectKey = "P0", notes, day, time) => {
 		newTask.day = day;
 		newTask.time = time;
 
-		datbaseObj && pageState.populateStorage(key, newTask);
+		datbaseObj && store(key, newTask);
 
 		return;
 	};
