@@ -18,8 +18,18 @@ html {
 	margin-left: auto;
 }
 
+#completed-task-count-container{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+#completed-task-count-text{
+	margin-right: 0.25em;
+}
+
 #completed-task-count {
-	margin-left: 0.25em;
+	margin: 0 4.5em 0 0.25em;
 }
 
 .project-list {
@@ -44,6 +54,7 @@ html {
 }
 
 #add-project-div {
+	width: fit-content;
 	margin-top: 0.5em;
 }
 
@@ -53,7 +64,7 @@ html {
 	align-items: center;
 }
 
-#add-project{
+#add-project {
 	margin-left: 0.15em;
 }
 
@@ -83,16 +94,6 @@ html {
 	/* backdrop-filter: blur(4px); */
 }
 
-#new-task-form-div,
-#new-project-form-div {
-	display: flex;
-	flex-direction: column;
-	border: solid;
-	background-color: #fff;
-	border-radius: 12px;
-	padding: 0.75em;
-}
-
 .task-list {
 	display: flex;
 	align-items: center;
@@ -101,9 +102,10 @@ html {
 
 .task-checkmark {
 	border: 0px;
-	width: 4%;
+	width: 1.35em;
 	height: 1.35em;
 	cursor: pointer;
+	visibility: visible;
 }
 
 .task-checkmark:after {
@@ -111,7 +113,7 @@ html {
 	height: 1.35em;
 	border-radius: 15px;
 	top: -2px;
-	left: 12px;
+	left: -5px;
 	position: relative;
 	background-color: #3d4849;
 	content: "";
@@ -125,14 +127,14 @@ html {
 	height: 1.35em;
 	border-radius: 15px;
 	top: -2px;
-	left: 12px;
+	left: -5px;
 	position: relative;
 	background-color: #ffa500;
 	content: "";
 	display: inline-block;
 	visibility: visible;
 	border: 2px solid #3d4849;
-	box-shadow:0 0 0px 2px #ffa500;
+	box-shadow: 0 0 0px 2px #ffa500;
 }
 
 .more-info-icon {
@@ -159,4 +161,74 @@ html {
 .drop-down-task-option:hover,
 .drop-down-project-option:hover {
 	background-color: #646d6d;
+}
+
+#new-task-form-div,
+#new-project-form-div {
+	display: flex;
+	color: #000;
+	flex-direction: column;
+	border: solid;
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 0.75em;
+}
+
+.pop-up-window-title {
+	margin: 0.5em 0;
+}
+
+#task-form {
+	display: flex;
+	flex-direction: column;
+}
+
+#task-name-error,
+#project-name-error {
+	color: #dc143c;
+}
+
+#project-name-input {
+	border: none;
+	border-bottom: solid #000 2px;
+}
+
+#project-name-input:focus {
+	outline: none;
+}
+
+.form-input,
+#project-name-selection {
+	margin: 0.5em 0;
+}
+
+#task-time-input,
+#task-date-input {
+	margin-right: 0.5em;
+}
+
+#task-button-selector-div,
+#project-button-selector-div {
+	width: fit-content;
+	margin: 0.5em auto;
+}
+
+#task-cancel-button,
+#project-cancel-button {
+	border-radius: 26px;
+	border: #3d4849 solid 2px;
+	color: #3d4849;
+	background-color: #fff;
+	margin: 0 0.15em;
+	cursor: pointer;
+}
+
+#task-submit-button,
+#project-submit-button {
+	border-radius: 26px;
+	border: #3d4849 solid 2px;
+	color: #fff;
+	background-color: #3d4849;
+	margin: 0 0.15em;
+	cursor: pointer;
 }

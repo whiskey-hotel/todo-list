@@ -21,7 +21,8 @@ function home(mainObj) {
 	const taskHeader = newElement("div", "header");
 	const taskTitle = newElement("h2", "title", "project-title-for-task-list", mainObj.projectName);
 	const completedDiv = newElement("div", ...Array(1), "completed-task-div");
-	const completedTasks = newElement("p", ...Array(2), "Completed Tasks:");
+	const countOfCompletedTasksContainer = newElement("div", ...Array(1), "completed-task-count-container");
+	const completedTasks = newElement("span", ...Array(1), "completed-task-count-text", "Completed Tasks:");
 	const countOfCompletedTasks = newElement("span", ...Array(1), "completed-task-count", "0");
 	const showCompletedTasks = newElement("p", ...Array(1), "show-hide-btn", "Show/Hide Completed Tasks");
 	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
@@ -46,8 +47,9 @@ function home(mainObj) {
 	taskDiv.appendChild(taskHeader);
 	taskHeader.appendChild(taskTitle);
 	taskDiv.appendChild(completedDiv);
-	completedDiv.appendChild(completedTasks);
-	completedDiv.appendChild(countOfCompletedTasks);
+	completedDiv.appendChild(countOfCompletedTasksContainer);
+	countOfCompletedTasksContainer.appendChild(completedTasks);
+	countOfCompletedTasksContainer.appendChild(countOfCompletedTasks);
 	completedDiv.appendChild(showCompletedTasks);
 	taskDiv.appendChild(taskListDiv);
 	taskContainer.appendChild(addTaskDiv);
@@ -154,8 +156,9 @@ function displayNewProjectWindow(storageKey = null) {
 	const projectNameInputLabel = newElement("label", "form-labels", ...Array(1), "Name:");
 	const projectNameInput = newElement("input", "form-input", "project-name-input");
 	projectNameInput.type = "text";
+	projectNameInput.placeholder = "Name";
 	projectNameInputLabel.setAttribute("for", "project-name-input");
-	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
+	const buttonSelectorDiv = newElement("div", ...Array(1), "project-button-selector-div");
 	const cancelButton = newElement("button", "button", "project-cancel-button", "Cancel");
 	const submitButton = newElement("input", "button", "project-submit-button");
 	submitButton.type = "submit";
@@ -170,11 +173,11 @@ function displayNewProjectWindow(storageKey = null) {
 	newProjectDiv.appendChild(title);
 	newProjectDiv.appendChild(error);
 	newProjectDiv.appendChild(projectForm);
-	projectForm.appendChild(projectNameInputLabel);
+	// projectForm.appendChild(projectNameInputLabel);
 	projectForm.appendChild(projectNameInput);
 	projectForm.appendChild(buttonSelectorDiv);
-	projectForm.appendChild(cancelButton);
-	projectForm.appendChild(submitButton);
+	buttonSelectorDiv.appendChild(cancelButton);
+	buttonSelectorDiv.appendChild(submitButton);
 
 	projectForm.addEventListener("submit", function (e) {
 		e.preventDefault();
@@ -324,11 +327,13 @@ function displayNewTaskWindow(storageKey = null) {
 
 	const taskNameInput = newElement("input", "form-input", "task-name-input");
 	taskNameInput.type = "text";
+	// taskNameInput.placeholder = "Task";
 	const taskNameInputLabel = newElement("label", "form-labels", ...Array(1), "Task:");
 	taskNameInputLabel.setAttribute("for", "task-name-input");
 
-	const taskNotesInput = newElement("input", "form-input", "task-notes-input");
-	taskNotesInput.type = "text";
+	const taskNotesInput = newElement("textarea", "form-input", "task-notes-input");
+	taskNotesInput.rows = "3";
+	// taskNotesInput.placeholder = "Notes";
 	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
@@ -345,7 +350,7 @@ function displayNewTaskWindow(storageKey = null) {
 		}
 	}
 
-	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
+	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project:");
 	projectNameSelectLabel.setAttribute("for", "project-name-selection");
 
 	const dateDiv = newElement("div", "date-time", "date");
@@ -386,7 +391,7 @@ function displayNewTaskWindow(storageKey = null) {
 	const timeInputLabel = newElement("label", "form-labels", ...Array(1), "Time:");
 	timeInputLabel.setAttribute("for", "task-time-input");
 
-	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
+	const buttonSelectorDiv = newElement("div", ...Array(1), "task-button-selector-div");
 	const cancelButton = newElement("button", "button", "task-cancel-button", "Cancel");
 	const submitButton = newElement("input", "button", "task-submit-button");
 	submitButton.type = "submit";
