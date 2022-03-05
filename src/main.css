@@ -1,3 +1,7 @@
+html {
+	background-color: #3d4849;
+	color: #e4e6eb;
+}
 .container {
 	display: grid;
 	grid-template-columns: 1fr 2fr;
@@ -10,15 +14,48 @@
 }
 
 #show-hide-btn,
-.number-of-tasks,
 .edit {
 	margin-left: auto;
 }
 
-.project-list {
-	border: black 2px solid;
+#completed-task-count-container{
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+}
+
+#completed-task-count-text{
+	margin-right: 0.25em;
+}
+
+#completed-task-count {
+	margin: 0 4.5em 0 0.25em;
+}
+
+.project-list {
+	border-bottom: #fff 2px solid;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.project-info-div {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.project-title {
+	margin: 0.5em 0 0.5em 0;
+}
+
+.number-of-tasks {
+	margin: 0 0 0.35em 0.45em;
+}
+
+#add-project-div {
+	width: fit-content;
+	margin-top: 0.5em;
 }
 
 #completed-task-div,
@@ -27,8 +64,13 @@
 	align-items: center;
 }
 
+#add-project {
+	margin-left: 0.15em;
+}
+
 #show-hide-btn,
-.drop-down-option,
+.drop-down-task-option,
+.drop-down-project-option,
 .more-info-icon,
 #add-task-icon,
 #add-project-div:hover {
@@ -52,9 +94,79 @@
 	/* backdrop-filter: blur(4px); */
 }
 
+.task-list {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.task-checkmark {
+	border: 0px;
+	width: 1.35em;
+	height: 1.35em;
+	cursor: pointer;
+	visibility: visible;
+}
+
+.task-checkmark:after {
+	width: 1.35em;
+	height: 1.35em;
+	border-radius: 15px;
+	top: -2px;
+	left: -5px;
+	position: relative;
+	background-color: #3d4849;
+	content: "";
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid #e4e6eb;
+}
+
+.task-checkmark:checked:after {
+	width: 1.35em;
+	height: 1.35em;
+	border-radius: 15px;
+	top: -2px;
+	left: -5px;
+	position: relative;
+	background-color: #ffa500;
+	content: "";
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid #3d4849;
+	box-shadow: 0 0 0px 2px #ffa500;
+}
+
+.more-info-icon {
+	display: none;
+	margin-left: auto;
+}
+
+.drop-down-project-content,
+.drop-down-task-content {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	right: 0;
+	background-color: #3d4849;
+	min-width: 160px;
+	z-index: 1;
+}
+
+.drop-down-task-option,
+.drop-down-project-option {
+	padding: 0.25em;
+}
+
+.drop-down-task-option:hover,
+.drop-down-project-option:hover {
+	background-color: #646d6d;
+}
+
 #new-task-form-div,
 #new-project-form-div {
 	display: flex;
+	color: #000;
 	flex-direction: column;
 	border: solid;
 	background-color: #fff;
@@ -62,31 +174,61 @@
 	padding: 0.75em;
 }
 
-.task-list {
+.pop-up-window-title {
+	margin: 0.5em 0;
+}
+
+#task-form {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 }
 
-.more-info-icon {
-    display: none;
-	margin-left: auto;
+#task-name-error,
+#project-name-error {
+	color: #dc143c;
 }
 
-.drop-down-content{
-    display:flex;
-    flex-direction: column;
-    position: absolute;
-    right: 0;
-    background-color: white;
-    min-width: 160px;
-    z-index: 1;
+#project-name-input {
+	border: none;
+	border-bottom: solid #000 2px;
 }
 
-.drop-down-option{
-    padding: 0.25em;
+#project-name-input:focus {
+	outline: none;
 }
 
-.drop-down-option:hover{
-    background-color: #ddd ;
+.form-input,
+#project-name-selection {
+	margin: 0.5em 0;
 }
 
+#task-time-input,
+#task-date-input {
+	margin-right: 0.5em;
+}
+
+#task-button-selector-div,
+#project-button-selector-div {
+	width: fit-content;
+	margin: 0.5em auto;
+}
+
+#task-cancel-button,
+#project-cancel-button {
+	border-radius: 26px;
+	border: #3d4849 solid 2px;
+	color: #3d4849;
+	background-color: #fff;
+	margin: 0 0.15em;
+	cursor: pointer;
+}
+
+#task-submit-button,
+#project-submit-button {
+	border-radius: 26px;
+	border: #3d4849 solid 2px;
+	color: #fff;
+	background-color: #3d4849;
+	margin: 0 0.15em;
+	cursor: pointer;
+}

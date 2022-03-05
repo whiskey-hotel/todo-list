@@ -13,6 +13,7 @@ function home(mainObj) {
 	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
 	const mainList = newElement("div", "project-list", "all-list");
 	mainList.setAttribute("data-value", "P0");
+	const projectInfoDiv = newElement("div", "project-info-div");
 	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
 	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, `${mainObj.incompleteTasks}`);
 	const taskContainer = newElement("div", "task-container");
@@ -20,7 +21,8 @@ function home(mainObj) {
 	const taskHeader = newElement("div", "header");
 	const taskTitle = newElement("h2", "title", "project-title-for-task-list", mainObj.projectName);
 	const completedDiv = newElement("div", ...Array(1), "completed-task-div");
-	const completedTasks = newElement("p", ...Array(2), "Completed Tasks:");
+	const countOfCompletedTasksContainer = newElement("div", ...Array(1), "completed-task-count-container");
+	const completedTasks = newElement("span", ...Array(1), "completed-task-count-text", "Completed Tasks:");
 	const countOfCompletedTasks = newElement("span", ...Array(1), "completed-task-count", "0");
 	const showCompletedTasks = newElement("p", ...Array(1), "show-hide-btn", "Show/Hide Completed Tasks");
 	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
@@ -34,8 +36,9 @@ function home(mainObj) {
 	projectsContainer.appendChild(projectsDiv);
 	projectHeader.appendChild(projectTitle);
 	projectsDiv.appendChild(mainList);
-	mainList.appendChild(listTitle);
-	mainList.appendChild(numberOfTasks);
+	mainList.appendChild(projectInfoDiv)
+	projectInfoDiv.appendChild(listTitle);
+	projectInfoDiv.appendChild(numberOfTasks);
 	projectsContainer.appendChild(addProjectDiv);
 	addProjectDiv.appendChild(addProjectIcon);
 	addProjectDiv.appendChild(addProject);
@@ -44,8 +47,9 @@ function home(mainObj) {
 	taskDiv.appendChild(taskHeader);
 	taskHeader.appendChild(taskTitle);
 	taskDiv.appendChild(completedDiv);
-	completedDiv.appendChild(completedTasks);
-	completedDiv.appendChild(countOfCompletedTasks);
+	completedDiv.appendChild(countOfCompletedTasksContainer);
+	countOfCompletedTasksContainer.appendChild(completedTasks);
+	countOfCompletedTasksContainer.appendChild(countOfCompletedTasks);
 	completedDiv.appendChild(showCompletedTasks);
 	taskDiv.appendChild(taskListDiv);
 	taskContainer.appendChild(addTaskDiv);
@@ -78,6 +82,7 @@ function newProject(obj) {
 	const modifiedNameForID = name.replace(/\s/g, "");
 	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
 	newProject.setAttribute("data-value", storageKey);
+	const projectInfoDiv = newElement("div", "project-info-div");
 	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
 	const numberOfTasksElement = newElement("span", "number-of-tasks", `${storageKey}-task-count`, `${numberOfTasks}`);
 
@@ -100,17 +105,18 @@ function newProject(obj) {
 		displaySelectedProjectTasks(e);
 	});
 
-	newProject.appendChild(newListTitle);
-	newProject.appendChild(numberOfTasksElement);
+	newProject.appendChild(projectInfoDiv);
+	projectInfoDiv.appendChild(newListTitle);
+	projectInfoDiv.appendChild(numberOfTasksElement);
 	newProject.appendChild(moreInfoIcon);
 
 	return newProject;
 }
 
 function dropDownOptionForProjects(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
-	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Rename");
-	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement("div", "drop-down-project-content", `drop-down-${storageKey}`);
+	const updateButton = newElement("span", "drop-down-project-option", `task${storageKey}-update-button`, "Rename");
+	const deleteButton = newElement("span", "drop-down-project-option", `task${storageKey}-delete-button`, "Delete");
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -120,12 +126,13 @@ function dropDownOptionForProjects(storageKey) {
 	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
         key associated with the clicked element. error occurs in the console at every execution */
 	document.addEventListener("click", function (e) {
-		if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
-			newProject.removeChild(document.getElementById("drop-down"));
+		if (document.getElementById(`drop-down-${storageKey}`) && !document.getElementById(`drop-down-${storageKey}`).contains(e.target) && e.target != more) {
+			newProject.removeChild(document.getElementById(`drop-down-${storageKey}`));
 		}
 	});
 
 	updateButton.addEventListener("click", function () {
+		//need to rename associated task projectname
 		sendToBody(displayNewProjectWindow(storageKey));
 		newProject.removeChild(dropDownDiv);
 	});
@@ -149,8 +156,9 @@ function displayNewProjectWindow(storageKey = null) {
 	const projectNameInputLabel = newElement("label", "form-labels", ...Array(1), "Name:");
 	const projectNameInput = newElement("input", "form-input", "project-name-input");
 	projectNameInput.type = "text";
+	projectNameInput.placeholder = "Name";
 	projectNameInputLabel.setAttribute("for", "project-name-input");
-	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
+	const buttonSelectorDiv = newElement("div", ...Array(1), "project-button-selector-div");
 	const cancelButton = newElement("button", "button", "project-cancel-button", "Cancel");
 	const submitButton = newElement("input", "button", "project-submit-button");
 	submitButton.type = "submit";
@@ -165,11 +173,11 @@ function displayNewProjectWindow(storageKey = null) {
 	newProjectDiv.appendChild(title);
 	newProjectDiv.appendChild(error);
 	newProjectDiv.appendChild(projectForm);
-	projectForm.appendChild(projectNameInputLabel);
+	// projectForm.appendChild(projectNameInputLabel);
 	projectForm.appendChild(projectNameInput);
 	projectForm.appendChild(buttonSelectorDiv);
-	projectForm.appendChild(cancelButton);
-	projectForm.appendChild(submitButton);
+	buttonSelectorDiv.appendChild(cancelButton);
+	buttonSelectorDiv.appendChild(submitButton);
 
 	projectForm.addEventListener("submit", function (e) {
 		e.preventDefault();
@@ -277,9 +285,9 @@ function newTask(obj) {
 }
 
 function dropDownOptionForTasks(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-content", "drop-down");
-	const updateButton = newElement("span", "drop-down-option", `task${storageKey}-update-button`, "Edit");
-	const deleteButton = newElement("span", "drop-down-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement("div", "drop-down-task-content", `drop-down-${storageKey}`);
+	const updateButton = newElement("span", "drop-down-task-option", `task${storageKey}-update-button`, "Edit");
+	const deleteButton = newElement("span", "drop-down-task-option", `task${storageKey}-delete-button`, "Delete");
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -289,8 +297,8 @@ function dropDownOptionForTasks(storageKey) {
 	/* This behavior is unexpected. looping through all storagekeys instead of just the one storage
         key associated with the clicked element. error occurs in the console at every execution */
 	document.addEventListener("click", function (e) {
-		if (document.getElementById("drop-down") && !document.getElementById("drop-down").contains(e.target) && e.target != more) {
-			newTask.removeChild(document.getElementById("drop-down"));
+		if (document.getElementById(`drop-down-${storageKey}`) && !document.getElementById(`drop-down-${storageKey}`).contains(e.target) && e.target != more) {
+			newTask.removeChild(document.getElementById(`drop-down-${storageKey}`));
 		}
 	});
 
@@ -319,11 +327,13 @@ function displayNewTaskWindow(storageKey = null) {
 
 	const taskNameInput = newElement("input", "form-input", "task-name-input");
 	taskNameInput.type = "text";
+	// taskNameInput.placeholder = "Task";
 	const taskNameInputLabel = newElement("label", "form-labels", ...Array(1), "Task:");
 	taskNameInputLabel.setAttribute("for", "task-name-input");
 
-	const taskNotesInput = newElement("input", "form-input", "task-notes-input");
-	taskNotesInput.type = "text";
+	const taskNotesInput = newElement("textarea", "form-input", "task-notes-input");
+	taskNotesInput.rows = "3";
+	// taskNotesInput.placeholder = "Notes";
 	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
@@ -340,7 +350,7 @@ function displayNewTaskWindow(storageKey = null) {
 		}
 	}
 
-	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project");
+	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project:");
 	projectNameSelectLabel.setAttribute("for", "project-name-selection");
 
 	const dateDiv = newElement("div", "date-time", "date");
@@ -381,7 +391,7 @@ function displayNewTaskWindow(storageKey = null) {
 	const timeInputLabel = newElement("label", "form-labels", ...Array(1), "Time:");
 	timeInputLabel.setAttribute("for", "task-time-input");
 
-	const buttonSelectorDiv = newElement("div", ...Array(1), "button-selector-div");
+	const buttonSelectorDiv = newElement("div", ...Array(1), "task-button-selector-div");
 	const cancelButton = newElement("button", "button", "task-cancel-button", "Cancel");
 	const submitButton = newElement("input", "button", "task-submit-button");
 	submitButton.type = "submit";

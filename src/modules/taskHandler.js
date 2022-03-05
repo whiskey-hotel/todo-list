@@ -94,8 +94,10 @@ function createTask(e, storageKey, newTaskContainer, taskNameInput, projectNameS
 			let oldKey = pageState.getStorage(storageKey).projectKey;
 			let completedStatus = pageState.getStorage(storageKey).complete;
 			let newKey = taskProjectKey;
-			projects().updateProjectTaskCountForExistingTask(oldKey, newKey, completedStatus);
-			updateDOMForExistingTask(newKey, oldKey);
+			if(oldKey != newKey){
+				projects().updateProjectTaskCountForExistingTask(oldKey, newKey, completedStatus);
+				updateDOMForExistingTask(newKey, oldKey);
+			}
 			instantiateTaskObject.update(storageKey, taskProjectNameValue, taskProjectKey, taskNameValue, taskNotesValue, taskDateValue, taskTimeValue);
 		} else {
 			let newTaskObject = instantiateTaskObject.create();
@@ -112,10 +114,12 @@ function removeTask(storageKey) {
 	const mainTaskDiv = document.getElementById("main-task-div");
 	const deletedTask = document.body.querySelector(`.task-list[data-value=${storageKey}`);
 	let projectKey = pageState.getStorage(storageKey).projectKey;
-	projects().updateNumberOfTasks(projectKey, "decrement");
-	tasks().deleteTask(storageKey);
+	
+	projects().updateProjectTaskCountForRemovedTask(storageKey);
 	updateDOMForDeletingTask(projectKey);
-	mainTaskDiv.removeChild(deletedTask);
+	updateDOMForTotalCompletedTasks()
+	tasks().deleteTask(storageKey);
+	deletedTask && mainTaskDiv.removeChild(deletedTask);
 }
 
 export { newTask, showHideCompletedTasks, completedTask, createTask, removeTask };
