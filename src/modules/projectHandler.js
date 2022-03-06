@@ -8,7 +8,7 @@ import { newTask } from "./taskHandler";
 import { newProject } from "./elementBuilder";
 
 function displayAllProjectTasks(e) {
-	let dataValue = e.target.dataset.value;
+	let dataValue = e.target.closest(".project-list[data-value").dataset.value;
 	if (dataValue) {
 		projects().changeCurrentProject(dataValue);
 	}
@@ -38,7 +38,7 @@ function displayAllProjectTasks(e) {
 }
 
 function displaySelectedProjectTasks(e) {
-	let dataValue = e.target.dataset.value;
+	let dataValue = e.target.closest(".project-list[data-value").dataset.value;
 	if (dataValue) {
 		projects().changeCurrentProject(dataValue);
 	}
