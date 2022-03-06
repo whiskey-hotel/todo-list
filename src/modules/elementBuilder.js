@@ -183,6 +183,7 @@ function home(mainObj) {
 }
 
 function newProject(obj) {
+	obj = pageState.getStorage(obj.key);
 	const { projectName: name, key: storageKey, incompleteTasks: numberOfTasks } = obj;
 
 	const modifiedNameForID = name.replace(/\s/g, "");
@@ -390,6 +391,7 @@ function displayNewProjectWindow(storageKey = null) {
 }
 
 function newTask(obj) {
+	obj = pageState.getStorage(obj.key);
 	let { key: storageKey, projectKey, taskName: task, notes, day, time, complete } = obj;
 	let isTaskExpired;
 
@@ -465,6 +467,7 @@ function newTask(obj) {
 	}
 
 	newTaskCheckMark.addEventListener("click", function () {
+		obj = pageState.getStorage(obj.key);
 		complete = completedTask(complete, obj);
 		const taskDiv = document.getElementById("main-task-div");
 		const taskChild = document.querySelector(`.task-list[data-value=${storageKey}`);
@@ -476,15 +479,15 @@ function newTask(obj) {
 
 		if (complete) {
 			newTaskCheckMark.checked;
-			projects().updateNumberOfTasks(projectKey, "dec");
+			projects().updateNumberOfTasks(obj.projectKey, "dec");
 			updateDOMForTotalCompletedTasks();
-			updateDOMForCompletedTask(projectKey);
+			updateDOMForCompletedTask(obj.projectKey);
 			!projects().getCompletedStatus() ? timer1() : null;
 		} else {
 			newTaskCheckMark.checked = false;
-			projects().updateNumberOfTasks(projectKey);
+			projects().updateNumberOfTasks(obj.projectKey);
 			updateDOMForTotalCompletedTasks("dec");
-			updateDOMForCompletedTask(projectKey, "inc");
+			updateDOMForCompletedTask(obj.projectKey, "inc");
 			clearTimeout(timer1);
 		}
 	});

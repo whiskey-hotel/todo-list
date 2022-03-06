@@ -125,6 +125,7 @@ function removeProject(storageKey) {
 	removeAllTasks(storageKey);
 	projects().deleteProject(storageKey);
 	mainProjectsDiv.removeChild(deletedProject);
+	projects().changeCurrentProject("P0");
 }
 
 export { displayAllProjectTasks, displaySelectedProjectTasks, removeAllTasks, createProject, removeProject };
