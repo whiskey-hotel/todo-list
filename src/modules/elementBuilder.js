@@ -183,9 +183,7 @@ function home(mainObj) {
 }
 
 function newProject(obj) {
-	const name = obj.projectName;
-	const storageKey = obj.key;
-	const numberOfTasks = obj.incompleteTasks;
+	const { projectName: name, key: storageKey, incompleteTasks: numberOfTasks } = obj;
 
 	const modifiedNameForID = name.replace(/\s/g, "");
 
@@ -392,13 +390,7 @@ function displayNewProjectWindow(storageKey = null) {
 }
 
 function newTask(obj) {
-	let storageKey = obj.key;
-	let projectKey = obj.projectKey;
-	let task = obj.taskName;
-	let notes = obj.notes;
-	let day = obj.day;
-	let time = obj.time;
-	let complete = obj.complete;
+	let { key: storageKey, projectKey, taskName: task, notes, day, time, complete } = obj;
 	let isTaskExpired;
 
 	if (day || time) {
@@ -793,7 +785,7 @@ function displayNewTaskWindow(storageKey = null) {
 		className: "button",
 		elementID: "task-submit-button",
 	});
-	
+
 	submitButton.type = "submit";
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "task-form");

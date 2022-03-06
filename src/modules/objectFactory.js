@@ -1,4 +1,3 @@
-import { newTask } from "./elementBuilder";
 import { pageState } from "./storage";
 
 const projects = (name) => {
@@ -118,7 +117,7 @@ const projects = (name) => {
 	};
 
 	const updateProjectTaskCountForExistingTask = function (oldKey, newKey, complete) {
-		//call if a task is changing its asocciated project
+		//call if a task is changing its associated project
 		let oldTaskObject = pageState.getStorage(oldKey);
 		let newTaskObject = pageState.getStorage(newKey);
 		newTaskObject = newKey == "P0" ? undefined : newTaskObject;

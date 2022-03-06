@@ -1,4 +1,4 @@
-import { format, parse, isAfter, parseISO, isDate } from "date-fns";
+import { format, parse, isAfter, parseISO } from "date-fns";
 
 function dateFormatter(day) {
 	let reFormatDateArray = day.split("-");
