@@ -7,36 +7,144 @@ import { updateDOMForTotalCompletedTasks, updateDOMForCompletedTask } from "./ta
 import { projects } from "./objectFactory";
 
 function home(mainObj) {
-	const projectsContainer = newElement("div", "projects-container");
-	const projectsDiv = newElement("div", ...Array(1), "projects-div");
-	const projectHeader = newElement("div", "header");
-	const projectTitle = newElement("h1", "title", ...Array(1), "My Projects");
-	const mainList = newElement("div", "project-list", "all-list");
+	const projectsContainer = newElement({
+		element: "div",
+		className: "projects-container",
+	});
+
+	const projectsDiv = newElement({
+		element: "div",
+		elementID: "projects-div",
+	});
+
+	const projectHeader = newElement({
+		element: "div",
+		className: "header",
+	});
+
+	const projectTitle = newElement({
+		element: "h1",
+		className: "title",
+		text: "My Projects",
+	});
+
+	const mainList = newElement({
+		element: "div",
+		className: "project-list",
+		elementID: "all-list",
+	});
+
 	mainList.setAttribute("data-value", "P0");
-	const projectInfoDiv = newElement("div", "project-info-div");
-	const listTitle = newElement("h3", "project-title", ...Array(1), "All");
-	const numberOfTasks = newElement("span", "number-of-tasks", `P0-task-count`, `${mainObj.incompleteTasks}`);
-	const taskContainer = newElement("div", "task-container");
-	const taskDiv = newElement("div", ...Array(1), "task-div");
-	const taskHeader = newElement("div", "header");
-	const taskTitle = newElement("h2", "title", "project-title-for-task-list", mainObj.projectName);
-	const completedDiv = newElement("div", ...Array(1), "completed-task-div");
-	const countOfCompletedTasksContainer = newElement("div", ...Array(1), "completed-task-count-container");
-	const completedTasks = newElement("span", ...Array(1), "completed-task-count-text", "Completed Tasks:");
-	const countOfCompletedTasks = newElement("span", ...Array(1), "completed-task-count", "0");
-	const showCompletedTasks = newElement("p", ...Array(1), "show-hide-btn", "Show/Hide Completed Tasks");
-	const taskListDiv = newElement("div", "task-list-div", "main-task-div");
-	const addProjectDiv = newElement("div", ...Array(1), "add-project-div");
-	const addProjectIcon = newElement("span", "material-icons-outlined", "add-project-icon", "add_circle_outline");
-	const addProject = newElement("span", ...Array(1), "add-project", "Add Project");
-	const addTaskDiv = newElement("div", ...Array(1), "add-task-div");
-	const addTaskIcon = newElement("span", "material-icons-outlined", "add-task-icon", "add_circle");
+
+	const projectInfoDiv = newElement({
+		element: "div",
+		className: "project-info-div",
+	});
+
+	const listTitle = newElement({
+		element: "h3",
+		className: "project-title",
+		text: "All",
+	});
+
+	const numberOfTasks = newElement({
+		element: "span",
+		className: "number-of-tasks",
+		elementID: `P0-task-count`,
+		text: `${mainObj.incompleteTasks}`,
+	});
+
+	const taskContainer = newElement({
+		element: "div",
+		className: "task-container",
+	});
+
+	const taskDiv = newElement({
+		element: "div",
+		elementID: "task-div",
+	});
+
+	const taskHeader = newElement({
+		element: "div",
+		className: "header",
+	});
+
+	const taskTitle = newElement({
+		element: "h2",
+		className: "title",
+		elementID: "project-title-for-task-list",
+		text: mainObj.projectName,
+	});
+
+	const completedDiv = newElement({
+		element: "div",
+		elementID: "completed-task-div",
+	});
+
+	const countOfCompletedTasksContainer = newElement({
+		element: "div",
+		elementID: "completed-task-count-container",
+	});
+
+	const completedTasks = newElement({
+		element: "span",
+		elementID: "completed-task-count-text",
+		text: "Completed Tasks:",
+	});
+
+	const countOfCompletedTasks = newElement({
+		element: "span",
+		elementID: "completed-task-count",
+		text: "0",
+	});
+
+	const showCompletedTasks = newElement({
+		element: "p",
+		elementID: "show-hide-btn",
+		text: "Show/Hide Completed Tasks",
+	});
+
+	const taskListDiv = newElement({
+		element: "div",
+		className: "task-list-div",
+		elementID: "main-task-div",
+	});
+
+	const addProjectDiv = newElement({
+		element: "div",
+		elementID: "add-project-div",
+	});
+
+	const addProjectIcon = newElement({
+		element: "span",
+		className: "material-icons-outlined",
+		elementID: "add-project-icon",
+		text: "add_circle_outline",
+	});
+
+	const addProject = newElement({
+		element: "span",
+		elementID: "add-project",
+		text: "Add Project",
+	});
+
+	const addTaskDiv = newElement({
+		element: "div",
+		elementID: "add-task-div",
+	});
+
+	const addTaskIcon = newElement({
+		element: "span",
+		className: "material-icons-outlined",
+		elementID: "add-task-icon",
+		text: "add_circle",
+	});
 
 	projectsContainer.appendChild(projectHeader);
 	projectsContainer.appendChild(projectsDiv);
 	projectHeader.appendChild(projectTitle);
 	projectsDiv.appendChild(mainList);
-	mainList.appendChild(projectInfoDiv)
+	mainList.appendChild(projectInfoDiv);
 	projectInfoDiv.appendChild(listTitle);
 	projectInfoDiv.appendChild(numberOfTasks);
 	projectsContainer.appendChild(addProjectDiv);
@@ -80,14 +188,42 @@ function newProject(obj) {
 	const numberOfTasks = obj.incompleteTasks;
 
 	const modifiedNameForID = name.replace(/\s/g, "");
-	const newProject = newElement("div", "project-list", `${modifiedNameForID}-list`);
-	newProject.setAttribute("data-value", storageKey);
-	const projectInfoDiv = newElement("div", "project-info-div");
-	const newListTitle = newElement("h3", "project-title", ...Array(1), `${name}`);
-	const numberOfTasksElement = newElement("span", "number-of-tasks", `${storageKey}-task-count`, `${numberOfTasks}`);
 
-	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
+	const newProject = newElement({
+		element: "div",
+		className: "project-list",
+		elementID: `${modifiedNameForID}-list`,
+	});
+
+	newProject.setAttribute("data-value", storageKey);
+
+	const projectInfoDiv = newElement({
+		element: "div",
+		className: "project-info-div",
+	});
+
+	const newListTitle = newElement({
+		element: "h3",
+		className: "project-title",
+		text: `${name}`,
+	});
+
+	const numberOfTasksElement = newElement({
+		element: "span",
+		className: "number-of-tasks",
+		elementID: `${storageKey}-task-count`,
+		text: `${numberOfTasks}`,
+	});
+
+	const moreInfoIcon = newElement({
+		element: "span",
+		className: "material-icons-outlined",
+		elementID: `info-icon-${storageKey}`,
+		text: "info",
+	});
+
 	moreInfoIcon.classList.add("more-info-icon");
+
 	newProject.addEventListener("mouseover", function () {
 		moreInfoIcon.style.display = "inline-block";
 	});
@@ -114,9 +250,26 @@ function newProject(obj) {
 }
 
 function dropDownOptionForProjects(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-project-content", `drop-down-${storageKey}`);
-	const updateButton = newElement("span", "drop-down-project-option", `task${storageKey}-update-button`, "Rename");
-	const deleteButton = newElement("span", "drop-down-project-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement({
+		element: "div",
+		className: "drop-down-project-content",
+		elementID: `drop-down-${storageKey}`,
+	});
+
+	const updateButton = newElement({
+		element: "span",
+		className: "drop-down-project-option",
+		elementID: `task${storageKey}-update-button`,
+		text: "Rename",
+	});
+
+	const deleteButton = newElement({
+		element: "span",
+		className: "drop-down-project-option",
+		elementID: `task${storageKey}-delete-button`,
+		text: "Delete",
+	});
+
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -148,19 +301,66 @@ function dropDownOptionForProjects(storageKey) {
 }
 
 function displayNewProjectWindow(storageKey = null) {
-	const newProjectContainer = newElement("div", ...Array(1), "new-project-form-container");
-	const newProjectDiv = newElement("div", ...Array(1), "new-project-form-div");
-	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Project");
-	const error = newElement("div", ...Array(1), "project-name-error");
-	const projectForm = newElement("form", ...Array(1), "project-form");
-	const projectNameInputLabel = newElement("label", "form-labels", ...Array(1), "Name:");
-	const projectNameInput = newElement("input", "form-input", "project-name-input");
+	const newProjectContainer = newElement({
+		element: "div",
+		elementID: "new-project-form-container",
+	});
+
+	const newProjectDiv = newElement({
+		element: "div",
+		elementID: "new-project-form-div",
+	});
+
+	const title = newElement({
+		element: "h2",
+		className: "pop-up-window-title",
+		text: "New Project",
+	});
+
+	const error = newElement({
+		element: "div",
+		elementID: "project-name-error",
+	});
+
+	const projectForm = newElement({
+		element: "form",
+		elementID: "project-form",
+	});
+
+	const projectNameInputLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Name:",
+	});
+
+	const projectNameInput = newElement({
+		element: "input",
+		className: "form-input",
+		elementID: "project-name-input",
+	});
+
 	projectNameInput.type = "text";
 	projectNameInput.placeholder = "Name";
 	projectNameInputLabel.setAttribute("for", "project-name-input");
-	const buttonSelectorDiv = newElement("div", ...Array(1), "project-button-selector-div");
-	const cancelButton = newElement("button", "button", "project-cancel-button", "Cancel");
-	const submitButton = newElement("input", "button", "project-submit-button");
+
+	const buttonSelectorDiv = newElement({
+		element: "div",
+		elementID: "project-button-selector-div",
+	});
+
+	const cancelButton = newElement({
+		element: "button",
+		className: "button",
+		elementID: "project-cancel-button",
+		text: "Cancel",
+	});
+
+	const submitButton = newElement({
+		element: "input",
+		className: "button",
+		elementID: "project-submit-button",
+	});
+
 	submitButton.type = "submit";
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "project-name-input");
@@ -212,20 +412,61 @@ function newTask(obj) {
 		time = timeFormatter(time);
 	}
 
-	const newTask = newElement("div", "task-list");
+	const newTask = newElement({
+		element: "div",
+		className: "task-list",
+	});
+
 	newTask.setAttribute("data-value", storageKey);
-	const newTaskCheckMark = newElement("input", "task-checkmark");
+
+	const newTaskCheckMark = newElement({
+		element: "input",
+		className: "task-checkmark",
+	});
+
 	newTaskCheckMark.type = "radio";
 	if (complete) {
 		newTaskCheckMark.checked = true;
 	}
-	const newTaskDetails = newElement("div", "task-info-container");
-	const newTaskTitle = newElement("h3", "task-title", ...Array(1), task);
-	const newTaskNotesDiv = newElement("div", "task-notes-div");
-	const newTaskNotes = newElement("p", "task-notes", ...Array(1), notes);
-	const newDateTimeDiv = newElement("div", "task-date-time-div");
-	const newTaskDay = newElement("p", "task-date", ...Array(1), day);
-	const newTasktime = newElement("p", "task-time", ...Array(1), time);
+	const newTaskDetails = newElement({
+		element: "div",
+		className: "task-info-container",
+	});
+
+	const newTaskTitle = newElement({
+		element: "h3",
+		className: "task-title",
+		text: task,
+	});
+
+	const newTaskNotesDiv = newElement({
+		element: "div",
+		className: "task-notes-div",
+	});
+
+	const newTaskNotes = newElement({
+		element: "p",
+		className: "task-notes",
+		text: notes,
+	});
+
+	const newDateTimeDiv = newElement({
+		element: "div",
+		className: "task-date-time-div",
+	});
+
+	const newTaskDay = newElement({
+		element: "p",
+		className: "task-date",
+		text: day,
+	});
+
+	const newTasktime = newElement({
+		element: "p",
+		className: "task-time",
+		text: time,
+	});
+
 	if (isTaskExpired) {
 		newTaskDay.style.color = "red";
 		newTasktime.style.color = "red";
@@ -256,7 +497,13 @@ function newTask(obj) {
 		}
 	});
 
-	const moreInfoIcon = newElement("span", "material-icons-outlined", `info-icon-${storageKey}`, "info");
+	const moreInfoIcon = newElement({
+		element: "span",
+		className: "material-icons-outlined",
+		elementID: `info-icon-${storageKey}`,
+		text: "info",
+	});
+
 	moreInfoIcon.classList.add("more-info-icon");
 	newTask.addEventListener("mouseover", function () {
 		moreInfoIcon.style.display = "inline-block";
@@ -285,9 +532,26 @@ function newTask(obj) {
 }
 
 function dropDownOptionForTasks(storageKey) {
-	const dropDownDiv = newElement("div", "drop-down-task-content", `drop-down-${storageKey}`);
-	const updateButton = newElement("span", "drop-down-task-option", `task${storageKey}-update-button`, "Edit");
-	const deleteButton = newElement("span", "drop-down-task-option", `task${storageKey}-delete-button`, "Delete");
+	const dropDownDiv = newElement({
+		element: "div",
+		className: "drop-down-task-content",
+		elementID: `drop-down-${storageKey}`,
+	});
+
+	const updateButton = newElement({
+		element: "span",
+		className: "drop-down-task-option",
+		elementID: `task${storageKey}-update-button`,
+		text: "Edit",
+	});
+
+	const deleteButton = newElement({
+		element: "span",
+		className: "drop-down-task-option",
+		elementID: `task${storageKey}-delete-button`,
+		text: "Delete",
+	});
+
 	updateButton.setAttribute("data-value", storageKey);
 	deleteButton.setAttribute("data-value", storageKey);
 
@@ -318,31 +582,77 @@ function dropDownOptionForTasks(storageKey) {
 }
 
 function displayNewTaskWindow(storageKey = null) {
-	const newTaskContainer = newElement("div", ...Array(1), "new-task-form-container");
-	const newTaskDiv = newElement("div", ...Array(1), "new-task-form-div");
-	const title = newElement("h2", "pop-up-window-title", ...Array(1), "New Task");
+	const newTaskContainer = newElement({
+		element: "div",
+		elementID: "new-task-form-container",
+	});
 
-	const error = newElement("div", ...Array(1), "task-name-error");
-	const form = newElement("form", ...Array(1), "task-form");
+	const newTaskDiv = newElement({
+		element: "div",
+		elementID: "new-task-form-div",
+	});
 
-	const taskNameInput = newElement("input", "form-input", "task-name-input");
+	const title = newElement({
+		element: "h2",
+		className: "pop-up-window-title",
+		text: "New Task",
+	});
+
+	const error = newElement({
+		element: "div",
+		elementID: "task-name-error",
+	});
+
+	const form = newElement({
+		element: "form",
+		elementID: "task-form",
+	});
+
+	const taskNameInput = newElement({
+		element: "input",
+		className: "form-input",
+		elementID: "task-name-input",
+	});
+
 	taskNameInput.type = "text";
 	// taskNameInput.placeholder = "Task";
-	const taskNameInputLabel = newElement("label", "form-labels", ...Array(1), "Task:");
+
+	const taskNameInputLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Task:",
+	});
+
 	taskNameInputLabel.setAttribute("for", "task-name-input");
 
-	const taskNotesInput = newElement("textarea", "form-input", "task-notes-input");
+	const taskNotesInput = newElement({
+		element: "textarea",
+		className: "form-input",
+		elementID: "task-notes-input",
+	});
+
 	taskNotesInput.rows = "3";
 	// taskNotesInput.placeholder = "Notes";
-	const taskNotesInputLabel = newElement("label", "form-labels", ...Array(1), "Notes:");
+
+	const taskNotesInputLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Notes:",
+	});
+
 	taskNotesInputLabel.setAttribute("for", "task-notes-input");
 
-	const projectNameSelect = newElement("select", "form-selection", "project-name-selection");
+	const projectNameSelect = newElement({
+		element: "select",
+		className: "form-selection",
+		elementID: "project-name-selection",
+	});
+
 	for (let i = 0; localStorage.key(i); i++) {
 		let storageKey = localStorage.key(i);
 		let storageObject = pageState.getStorage(storageKey);
 		if (storageObject["type"] == "project") {
-			const projectNameSelectOption = newElement("option");
+			const projectNameSelectOption = newElement({ element: "option" });
 			projectNameSelectOption.setAttribute("value", storageObject.projectName);
 			projectNameSelectOption.setAttribute("data", storageObject.key);
 			projectNameSelectOption.textContent = storageObject.projectName;
@@ -350,50 +660,140 @@ function displayNewTaskWindow(storageKey = null) {
 		}
 	}
 
-	const projectNameSelectLabel = newElement("label", "form-labels", ...Array(1), "Select a project:");
+	const projectNameSelectLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Select a project:",
+	});
+
 	projectNameSelectLabel.setAttribute("for", "project-name-selection");
 
-	const dateDiv = newElement("div", "date-time", "date");
+	const dateDiv = newElement({
+		element: "div",
+		className: "date-time",
+		elementID: "date",
+	});
 
-	const dateRadioYes = newElement("input", ...Array(1), "include-date");
+	const dateRadioYes = newElement({
+		element: "input",
+		elementID: "include-date",
+	});
+
 	dateRadioYes.type = "Radio";
-	const dateRadioYesLabel = newElement("label", "form-labels", ...Array(1), "Yes");
+
+	const dateRadioYesLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Yes",
+	});
+
 	dateRadioYesLabel.setAttribute("for", "include-date");
 
-	const dateRadioNo = newElement("input", ...Array(1), "dont-include-date");
+	const dateRadioNo = newElement({
+		element: "input",
+		elementID: "dont-include-date",
+	});
+
 	dateRadioNo.type = "Radio";
 	dateRadioNo.checked = true;
-	const dateRadioNoLabel = newElement("label", "form-labels", ...Array(1), "No");
+
+	const dateRadioNoLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "No",
+	});
+
 	dateRadioNoLabel.setAttribute("for", "dont-include-date");
 
-	const dateInput = newElement("input", "form-input", "task-date-input");
+	const dateInput = newElement({
+		element: "input",
+		className: "form-input",
+		elementID: "task-date-input",
+	});
+
 	dateInput.type = "date";
 	dateInput.disabled = true;
-	const dateInputLabel = newElement("label", "form-labels", ...Array(1), "Date:");
+
+	const dateInputLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Date:",
+	});
+
 	dateInputLabel.setAttribute("for", "task-date-input");
 
-	const timeDiv = newElement("div", "date-time", "time");
+	const timeDiv = newElement({
+		element: "div",
+		className: "date-time",
+		elementID: "time",
+	});
 
-	const timeRadioYes = newElement("input", ...Array(1), "include-time");
+	const timeRadioYes = newElement({
+		element: "input",
+		elementID: "include-time",
+	});
+
 	timeRadioYes.type = "Radio";
-	const timeRadioYesLabel = newElement("label", "form-labels", ...Array(1), "Yes");
+
+	const timeRadioYesLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Yes",
+	});
+
 	timeRadioYesLabel.setAttribute("for", "include-time");
 
-	const timeRadioNo = newElement("input", ...Array(1), "dont-include-time");
+	const timeRadioNo = newElement({
+		element: "input",
+		elementID: "dont-include-time",
+	});
+
 	timeRadioNo.type = "Radio";
 	timeRadioNo.checked = true;
-	const timeRadioNoLabel = newElement("label", "form-labels", ...Array(1), "No");
+
+	const timeRadioNoLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "No",
+	});
+
 	timeRadioNoLabel.setAttribute("for", "dont-include-time");
 
-	const timeInput = newElement("input", "form-input", "task-time-input");
+	const timeInput = newElement({
+		element: "input",
+		className: "form-input",
+		elementID: "task-time-input",
+	});
+
 	timeInput.type = "time";
 	timeInput.disabled = true;
-	const timeInputLabel = newElement("label", "form-labels", ...Array(1), "Time:");
+
+	const timeInputLabel = newElement({
+		element: "label",
+		className: "form-labels",
+		text: "Time:",
+	});
+
 	timeInputLabel.setAttribute("for", "task-time-input");
 
-	const buttonSelectorDiv = newElement("div", ...Array(1), "task-button-selector-div");
-	const cancelButton = newElement("button", "button", "task-cancel-button", "Cancel");
-	const submitButton = newElement("input", "button", "task-submit-button");
+	const buttonSelectorDiv = newElement({
+		element: "div",
+		elementID: "task-button-selector-div",
+	});
+
+	const cancelButton = newElement({
+		element: "button",
+		className: "button",
+		elementID: "task-cancel-button",
+		text: "Cancel",
+	});
+
+	const submitButton = newElement({
+		element: "input",
+		className: "button",
+		elementID: "task-submit-button",
+	});
+	
 	submitButton.type = "submit";
 	submitButton.value = "OK";
 	submitButton.setAttribute("for", "task-form");

@@ -5,7 +5,12 @@ import * as pageRender from "./modules/DOMController";
 import { pageState } from "./modules/storage";
 import { projects } from "./modules/objectFactory";
 
-const main = pageRender.newElement("div", "container", "content");
+const main = pageRender.newElement({
+	element: "div",
+	className: "container",
+	elementID: "content",
+});
+
 const instantiateMainProject = projects("All");
 let mainListObj = instantiateMainProject.create();
 

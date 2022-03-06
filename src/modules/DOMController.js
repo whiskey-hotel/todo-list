@@ -1,4 +1,4 @@
-function newElement(element = "", className = "", elementID = "", text = "", href = "") {
+function newElement({element = "", className = "", elementID = "", text = "", href = ""}) {
 	const newElement = document.createElement(element);
 	className ? (newElement.classList = className) : null;
 	elementID ? (newElement.id = elementID) : null;
