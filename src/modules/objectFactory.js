@@ -97,21 +97,21 @@ const projects = (name) => {
 		} else if (dec) {
 			//marking a task as complete
 			if (key != "P0") {
-				--allProjectObject.incompleteTasks;
+				allProjectObject.incompleteTasks > 0 ? --allProjectObject.incompleteTasks : (allProjectObject.incompleteTasks = 0);
 				++allProjectObject.completeTasks;
 				store("P0", allProjectObject);
 			}
-			--storageObject.incompleteTasks;
+			storageObject.incompleteTasks > 0 ? --storageObject.incompleteTasks : (storageObject.incompleteTasks = 0);
 			++storageObject.completeTasks;
 		} else {
 			//marking a task as incomplete
 			if (key != "P0") {
 				++allProjectObject.incompleteTasks;
-				--allProjectObject.completeTasks;
+				allProjectObject.completeTasks > 0 ? --allProjectObject.completeTasks : (allProjectObject.completeTasks = 0);
 				store("P0", allProjectObject);
 			}
 			++storageObject.incompleteTasks;
-			--storageObject.completeTasks;
+			storageObject.completeTasks > 0 ? --storageObject.completeTasks : (storageObject.completeTasks = 0);
 		}
 		store(key, storageObject);
 	};
@@ -124,13 +124,13 @@ const projects = (name) => {
 		oldTaskObject = oldKey == "P0" ? undefined : oldTaskObject;
 
 		if (!complete) {
-			oldTaskObject && --oldTaskObject.incompleteTasks;
-			oldTaskObject && --oldTaskObject.numberOfTasks;
+			oldTaskObject && oldTaskObject.incompleteTasks > 0 ? --oldTaskObject.incompleteTasks : (oldTaskObject.incompleteTasks = 0);
+			oldTaskObject && oldTaskObject.numberOfTasks > 0 ? --oldTaskObject.numberOfTasks : (oldTaskObject.numberOfTasks = 0);
 			newTaskObject && ++newTaskObject.incompleteTasks;
 			newTaskObject && ++newTaskObject.numberOfTasks;
 		} else {
-			oldTaskObject && --oldTaskObject.completeTasks;
-			oldTaskObject && --oldTaskObject.numberOfTasks;
+			oldTaskObject && oldTaskObject.completeTasks > 0 ? --oldTaskObject.completeTasks : (oldTaskObject.completeTasks = 0);
+			oldTaskObject && oldTaskObject.numberOfTasks > 0 ? --oldTaskObject.numberOfTasks : (oldTaskObject.numberOfTasks = 0);
 			newTaskObject && ++newTaskObject.completeTasks;
 			newTaskObject && ++newTaskObject.numberOfTasks;
 		}
@@ -144,24 +144,23 @@ const projects = (name) => {
 		let allProjectObject = pageState.getStorage("P0");
 		if (taskObject.complete) {
 			if (projectObject.key != "P0") {
-				--allProjectObject.completeTasks;
-				--allProjectObject.numberOfTasks;
+				allProjectObject.completeTasks > 0 ? --allProjectObject.completeTasks : (allProjectObject.completeTasks = 0);
+				allProjectObject.numberOfTasks > 0 ? --allProjectObject.numberOfTasks : (allProjectObject.numberOfTasks = 0);
 				store("P0", allProjectObject);
 			}
-			--projectObject.completeTasks;
-			--projectObject.numberOfTasks;
+			projectObject.completeTasks > 0 ? --projectObject.completeTasks : (projectObject.completeTasks = 0);
+			projectObject.numberOfTasks > 0 ? --projectObject.numberOfTasks : (projectObject.numberOfTasks = 0);
 			store(projectObject.key, projectObject);
 		} else {
 			if (projectObject.key != "P0") {
-				--allProjectObject.incompleteTasks;
-				--allProjectObject.numberOfTasks;
+				allProjectObject.incompleteTasks > 0 ? --allProjectObject.incompleteTasks : (allProjectObject.incompleteTasks = 0);
+				allProjectObject.numberOfTasks > 0 ? --allProjectObject.numberOfTasks : (allProjectObject.numberOfTasks = 0);
 				store("P0", allProjectObject);
 			}
-			--projectObject.incompleteTasks;
-			--projectObject.numberOfTasks;
+			projectObject.incompleteTasks > 0 ? --projectObject.incompleteTasks : (projectObject.incompleteTasks = 0);
+			projectObject.numberOfTasks > 0 ? --projectObject.numberOfTasks : (projectObject.numberOfTasks = 0);
 			store(projectObject.key, projectObject);
 		}
-		
 	};
 
 	const keyGenerator = function (letter) {
